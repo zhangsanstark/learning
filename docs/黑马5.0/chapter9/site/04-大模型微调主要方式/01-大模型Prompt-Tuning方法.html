@@ -1,0 +1,1891 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/05-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D.html">
+      
+      
+        <link rel="next" href="02-%E5%A4%A7%E6%A8%A1%E5%9E%8BPEFT%E5%BE%AE%E8%B0%83%E6%96%B9%E6%B3%95.html">
+      
+      
+      <link rel="icon" href="../img/AI.jpg">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+    
+    
+      
+        <title>4.1 大模型Prompt-Tuning方法 - 大模型技术开发与应用V5.0</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prompt-tuning" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-header__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            大模型技术开发与应用V5.0
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              4.1 大模型Prompt-Tuning方法
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-nav__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    大模型技术开发与应用V5.0
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    1:大模型背景简介
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            1:大模型背景简介
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/01-LLM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.1 LLM基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/02-LLM%E4%B8%BB%E8%A6%81%E7%B1%BB%E5%88%AB%E6%9E%B6%E6%9E%84.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 LLM主要架构类别
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    2:主流大模型介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            2:主流大模型介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/01-GPT%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.1 GPT系列模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/02-LLM%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E4%BB%A3%E8%A1%A8%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.2 LLM主流开源代表模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    3:大模型提示词工程应用实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            3:大模型提示词工程应用实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.1 大模型Prompt工程指南
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/02-%E9%87%91%E8%9E%8D%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81%E6%96%B9%E5%90%91%E8%AF%84%E4%BC%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.2 金融行业动态方向评估项目介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/03-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.3 LLM实现金融文本分类
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/04-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.4 LLM实现金融文本信息抽取
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/05-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.5 LLM实现金融文本匹配
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    4:大模型微调主要方式
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            4:大模型微调主要方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    4.1 大模型Prompt-Tuning方法
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt-Tuning%E6%96%B9%E6%B3%95.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    4.1 大模型Prompt-Tuning方法
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-nlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 NLP任务四种范式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 Fine-Tuning(微调)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      3 Prompt-Tuning(提示微调)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Prompt-Tuning(提示微调)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 什么是Prompt?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-prompt-tuing" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Prompt-Tuing定义
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 Prompt-Tuning技术发展历程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      5 Prompt-Tuning的主要方法
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5 Prompt-Tuning的主要方法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-prompt-tuning-gpt3pet" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Prompt-Tuning的鼻祖----GPT3和PET
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-pet" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 PET模型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-prompt-oriented-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Prompt-Oriented Fine-Tuning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-hard-prompt-soft-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 Hard Prompt &amp; Soft Prompt
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 Hard Prompt & Soft Prompt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#541" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.1 连续提示模板
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#542-prompt-tuningnlg" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.2 Prompt Tuning（NLG任务）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#543-p-tuningnlu" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.3 P-tuning（NLU任务）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#544-pptpre-trained-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.4 PPT（Pre-trained Prompt Tuning）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      小结总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-%E5%A4%A7%E6%A8%A1%E5%9E%8BPEFT%E5%BE%AE%E8%B0%83%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.2 大模型PEFT微调方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    5:基于GPT2预训练模型搭建医疗问诊机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            5:基于GPT2预训练模型搭建医疗问诊机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-%E5%9F%BA%E4%BA%8EGPT2%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9E%E7%8E%B0.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5.1 医疗问诊机器人实现
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    6:新零售行业评价决策系统
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            6:新零售行业评价决策系统
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/01-%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.1 项目背景介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/02-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.2 BERT+PET方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/03-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.3 BERT+PET方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/04-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.4 BERT+PET方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/05-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.5 BERT+P-Tuning方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/06-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.6 BERT+P-Tuning方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/07-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.7 BERT+P-Tuning方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/01-%E9%A1%B9%E7%9B%AE%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.1 项目整体简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/02-%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.2 多任务数据预处理方式
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/03-LoRA%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.3 LoRA方式微调ChatGLM模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/%E8%B6%8B%E5%8A%A8%E4%BA%91%E4%BD%BF%E7%94%A8%E3%80%8A%E8%A1%A5%E5%85%85%E3%80%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.4 趋动云使用《扩展》
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6LangChain%E8%AF%A6%E8%A7%A3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.1 LangChain介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/02-LangChain%20%2B%20ChatGLM%20%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.2 LangChain+ChatGLM-6B实现本地知识库问答
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    9:大模型Agent的应用
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            9:大模型Agent的应用
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BFunction%20Call%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.1 大模型functioncall的原理及其应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/02-GPTs%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.2 GPTs的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/03-Assistant%20API%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.3 Assistant API的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/04-Agent%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.4 Agent原理介绍与应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-nlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 NLP任务四种范式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 Fine-Tuning(微调)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      3 Prompt-Tuning(提示微调)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Prompt-Tuning(提示微调)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 什么是Prompt?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-prompt-tuing" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Prompt-Tuing定义
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 Prompt-Tuning技术发展历程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      5 Prompt-Tuning的主要方法
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5 Prompt-Tuning的主要方法">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-prompt-tuning-gpt3pet" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Prompt-Tuning的鼻祖----GPT3和PET
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-pet" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 PET模型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-prompt-oriented-fine-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Prompt-Oriented Fine-Tuning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-hard-prompt-soft-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 Hard Prompt &amp; Soft Prompt
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4 Hard Prompt & Soft Prompt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#541" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.1 连续提示模板
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#542-prompt-tuningnlg" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.2 Prompt Tuning（NLG任务）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#543-p-tuningnlu" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.3 P-tuning（NLU任务）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#544-pptpre-trained-prompt-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4.4 PPT（Pre-trained Prompt Tuning）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      小结总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="prompt-tuning">Prompt-Tuning方法<a class="headerlink" href="#prompt-tuning" title="Permanent link">&para;</a></h1>
+<hr />
+<h3 id="_1">学习目标<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>了解LLM进阶历程四种范式.</li>
+<li>掌握Fine-Tuning模型微调的基本原理</li>
+<li>掌握Prompt_Tuning模型微调的基本原理</li>
+</ul>
+<hr />
+<h3 id="1-nlp">1 NLP任务四种范式<a class="headerlink" href="#1-nlp" title="Permanent link">&para;</a></h3>
+<p>目前学术界一般将NLP任务的发展分为四个阶段，即NLP四范式：</p>
+<ul>
+<li>第一范式：基于「传统机器学习模型」的范式，如TF-IDF特征+朴素贝叶斯等机器算法；</li>
+<li>第二范式：基于「深度学习模型」的范式，如word2vec特征+LSTM等深度学习算法，相比于第一范式，模型准确有所提高，特征工程的工作也有所减少；</li>
+<li>第三范式：基于「预训练模型+fine-tuning」的范式，如Bert+fine-tuning的NLP任务，相比于第二范式，模型准确度显著提高，模型也随之变得更大，但小数据集就可训练出好模型；</li>
+<li>第四范式：基于「预训练模型+Prompt+预测」的范式，如Bert+Prompt的范式相比于第三范式，模型训练所需的训练数据显著减少。</li>
+</ul>
+<p>在整个NLP领域，整个发展历程是朝着精度更高、少监督，甚至无监督的方向发展的。而 Prompt-Tuning是目前学术界向这个方向进军最新也是最火的研究成果。</p>
+<hr />
+<h3 id="2-fine-tuning">2 Fine-Tuning(微调)<a class="headerlink" href="#2-fine-tuning" title="Permanent link">&para;</a></h3>
+<p>Fine-Tuning属于一种迁移学习方式，在自然语言处理（NLP）中，Fine-Tuning是用于将预训练的语言模型适应于特定任务或领域。Fine-Tuning的基本思想是采用已经在大量文本上进行训练的预训练语言模型，然后在小规模的任务特定文本上继续训练它.</p>
+<div align=center><img src="./assets/1-3-1.png" style="zoom:70%" ><img/></div>
+
+<p>经典的Fine-Tuning方法包括将预训练模型与少量特定任务数据一起继续训练。在这个过程中，预训练模型的权重被更新，以更好地适应任务。所需的Fine-Tuning量取决于预训练语料库和任务特定语料库之间的相似性。如果两者相似，可能只需要少量的Fine-Tuning，如果两者不相似，则可能需要更多的Fine-Tuning.</p>
+<p>但是，在大多数下游任务微调时，下游任务的目标和预训练的目标差距过大导致提升效果不明显（过拟合），微调过程中需要依赖大量的监督语料等等。至此，以GPT3、PET等为首的模型提出一种基于预训练语言模型的新的微调范式--Prompt-Tuning.该方法的目的是通过添加模板的方法来避免引入额外的参数，从而让模型可以在小样本（few-shot）或者零样本（zero-shot）场景下达到理想的效果。</p>
+<p>Prompt-Tuning主要解决传统Fine-Tuning方式的两个痛点：</p>
+<ul>
+<li>降低语义偏差：预训练任务主要以MLM为主，而下游任务则重新引入新的训练参数，因此两个阶段目标差异较大。因此需要解决Pre-Training和Fine-Tuning之间的Gap。</li>
+<li>避免过拟合：由于Fine-Tuning阶段需要引入新的参数适配相应任务，因此在样本数量有限的情况下容易发生过拟合，降低模型泛化能力。因此需要解决预训练模型的过拟合能力。 </li>
+</ul>
+<hr />
+<h3 id="3-prompt-tuning">3 Prompt-Tuning(提示微调)<a class="headerlink" href="#3-prompt-tuning" title="Permanent link">&para;</a></h3>
+<h4 id="31-prompt">3.1 什么是Prompt?<a class="headerlink" href="#31-prompt" title="Permanent link">&para;</a></h4>
+<p>prompt顾名思义就是“提示”的意思，应该有人玩过你画我猜这个游戏吧，对方根据一个词语画一幅画，我们来猜他画的是什么，因为有太多灵魂画手了，画风清奇，或者你们没有心有灵犀，根本就不好猜啊！这时候屏幕上会出现一些提示词比如3个字，水果，那岂不是好猜一点了嘛，毕竟3个字的水果也不多呀。看到了吧，这就是prompt的魅力.</p>
+<div align=center><img src="./assets/3-1-0.png" style="zoom:70%" ><img/></div>
+
+<h4 id="32-prompt-tuing">3.2 Prompt-Tuing定义<a class="headerlink" href="#32-prompt-tuing" title="Permanent link">&para;</a></h4>
+<p>基于Fine-Tuning的方法是让预训练模型去迁就下游任务，而基于Prompt-Tuning的方法可以让下游任务去迁就预训练模型, 其目的是将Fine-tuning的下游任务目标转换为Pre-training的任务。那么具体如何工作呢？我们以一个二分类的情感分析为例子，进行简单理解：</p>
+<ul>
+<li>eg:  定一个句子<code>[CLS] I like the Disney films very much. [SEP]</code> </li>
+<li>传统的Fine-tuning方法: 将其通过BERT的Transformer获得 <code>[CLS]</code>表征之后再喂入新增加的MLP分类器进行二分类，预测该句子是积极的（positive）还是消极的（negative），因此需要一定量的训练数据来训练。</li>
+<li>Prompt-Tuning执行步骤：</li>
+<li>1.构建模板（Template Construction）:  通过人工定义、自动搜索、文本生成等方法，生成与给定句子相关的一个含有<code>[MASK]</code>标记的模板。例如<code>It was [MASK].</code>，并拼接到原始的文本中，获得Prompt-Tuning的输入：<code>[CLS] I like the Disney films very much. [SEP] It was [MASK]. [SEP]</code>。将其喂入BERT模型中，并复用预训练好的MLM分类器（在huggingface中为BertForMaskedLM），即可直接得到<code>[MASK]</code>预测的各个token的概率分布。</li>
+<li>2.标签词映射（Label Word Verbalizer） ：因为<code>[MASK]</code>部分我们只对部分词感兴趣，因此需要建立一个映射关系。例如如果<code>[MASK]</code>预测的词是“great”，则认为是positive类，如果是“terrible”，则认为是negative类。</li>
+<li>3.训练：根据Verbalizer，则可以获得指定label word的预测概率分布，并采用交叉信息熵进行训练。此时因为只对预训练好的MLM head进行微调，所以避免了过拟合问题。</li>
+</ul>
+<blockquote>
+<p>注意思考：不同的句子应该有不同的template和label word，没错，因为每个句子可能期望预测出来的label word都不同，因此如何最大化的寻找当前任务更加合适的template和label word是Prompt-tuning非常重要的挑战。</p>
+</blockquote>
+<p>其实我们可以理解，引入的模板和标签词本质上属于一种数据增强，通过添加提示的方式引入先验知识。</p>
+<hr />
+<h3 id="4-prompt-tuning">4 Prompt-Tuning技术发展历程<a class="headerlink" href="#4-prompt-tuning" title="Permanent link">&para;</a></h3>
+<div align=center><img src="./assets/1-3-8.png" style="zoom:80%" ><img/></div>
+
+<hr />
+<p>Prompt-Tuning自GPT-3被提出以来，从传统的离散、连续的Prompt构建、走向面向超大规模模型的In-Context Learning、Instruction-tuning和Chain_of_Thought.</p>
+<hr />
+<h3 id="5-prompt-tuning">5 Prompt-Tuning的主要方法<a class="headerlink" href="#5-prompt-tuning" title="Permanent link">&para;</a></h3>
+<p>Prompt-Tuning具体如何实现，其有什么困难和挑战？这里我们挑选一些具有代表性的.</p>
+<h4 id="51-prompt-tuning-gpt3pet">5.1 Prompt-Tuning的鼻祖----GPT3和PET<a class="headerlink" href="#51-prompt-tuning-gpt3pet" title="Permanent link">&para;</a></h4>
+<p>Prompt-Tuning最早是在GPT-3《Language Models are Few-Shot Learners》中被提出来的。其开创性的提出了In-context Learning（ICL, 情景学习）的思想。即无须修改模型即可实现few-shot、zero-shot的learning。同时引入了Demonstrate Learning, 即让模型知道与标签相似的语义描述，提升推理能力.</p>
+<ul>
+<li>In-context Learning: Prompt前身，通过从训练集挑选一些样本作为任务的提示，来实现免参数更新的模型预测。</li>
+<li>Demonstration Learning：添加一些新的样本作为提示。模型可以根据新添加的样例句子就可以"照猫画虎"式的预测结果了.</li>
+</ul>
+<div align=center><img src="./assets/1-3-2.png" style="zoom:70%" ><img/></div>
+
+<hr />
+<p>常用的In-context learning方法包括：</p>
+<ul>
+<li>zero-shot learning</li>
+<li>定义: 给出任务的描述, 然后提供测试数据对其进行预测, 直接让预训练好的模型去进行任务测试. </li>
+<li>示例: 向模型输入“这个任务要求将中文翻译为英文. 销售-&gt;”, 然后要求模型预测下一个输出应该是什么, 正确答案应为“sell”.</li>
+<li>one-shot learning</li>
+<li>定义: 在预训练和真正翻译的样本之间, 插入一个样本做指导. 相当于在预训练好的结果和所要执行的任务之间, 给一个例子, 告诉模型英语翻译为法语, 应该这么翻译. </li>
+<li>示例: 向模型输入“这个任务要求将中文翻译为英文. 你好-&gt;hello, 销售-&gt;”, 然后要求模型预测下一个输出应该是什么, 正确答案应为“sell”. </li>
+<li>few-shot learning</li>
+<li>定义: 在预训练和真正翻译的样本之间, 插入多个样本（一般10-100条）做指导. 相当于在预训练好的结果和所要执行的任务之间, 给多个例子, 告诉模型应该如何工作. </li>
+<li>示例: 向模型输入“这个任务要求将中文翻译为英文. 你好-&gt;hello, 再见-&gt;goodbye, 购买-&gt;purchase, 销售-&gt;”, 然后要求模型预测下一个输出应该是什么, 正确答案应为“sell”. </li>
+</ul>
+<p>但是这类方法有一个明显的缺陷是——其建立在超大规模的预训练语言模型上，此时的模型参数数量通常超过100亿，在真实场景中很难应用，因此众多研究者开始探索GPT-3的这套思路在小规模的语言模型（如Bert）上还是否适用？事实上，这套方法在小规模的语言模型上是可行的，但是需要注意：</p>
+<ul>
+<li>模型参数规模小了，prompt直接用在zero-shot上效果会下降，因此需要考虑将In-context Learning和Demonstrate Learning应用在Fine-Tuning阶段，也就是后面要讲到的Prompt-Tuning。</li>
+<li>GPT-3中提供的提示（Natural Language Prompt）过于简单，泛化性能低。</li>
+</ul>
+<p>因此，PET模型问世.</p>
+<hr />
+<h4 id="52-pet">5.2 PET模型<a class="headerlink" href="#52-pet" title="Permanent link">&para;</a></h4>
+<p>PET（Pattern-Exploiting Training）出自《Exploiting Cloze Questions for Few Shot Text Classification and Natural Language Inference》（EACL2021），根据论文题目则可以猜出，Prompt-Tuning启发于文本分类任务，并且试图将所有的分类任务转换为与MLM一致的完形填空。</p>
+<hr />
+<p>PET模型提出两个很重要的组件：</p>
+<ul>
+<li><strong>Pattern（Template）</strong> ：记作T, 即上文提到的Template，其为额外添加的带有<code>[mask]</code>标记的短文本，通常一个样本只有一个Pattern（因为我们希望只有1个让模型预测的<code>[mask]</code>标记）。由于不同的任务、不同的样本可能会有其更加合适的pattern，<strong>因此如何构建合适的pattern是Prompt-Tuning的研究点之一</strong>；</li>
+<li><strong>Verbalizer</strong> ：记作V, 即标签词的映射，对于具体的分类任务，需要选择指定的标签词（label word）。例如情感分析中，我们期望Verbalizer可能是 （positive和negative是类标签）。同样，不同的任务有其相应的label word，但需要注意的是，Verbalizer的构建需要取决于对应的Pattern。因此 <strong>如何构建Verbalizer是另一个研究挑战</strong> 。</li>
+</ul>
+<hr />
+<p>上述两个组件被称为Pattern-Verbalizer-Pair（PVP），在后续的大多数研究中均采用这种PVP组件。基于PVP的训练目标可以定义为下面形式：</p>
+<ul>
+<li>给定一个句子，以及对应的标签，给定定义的PVP组件，则有</li>
+</ul>
+<p><img alt="image-20240805183630239" src="assets/image-20240805183630239.png" /></p>
+<p>目前基于PVP框架，当前最需要关注的问题是如何选择或构建合适的Pattern和Verbalizer 。一种简单的方法是根据特定任务的性质和先验知识人工设计模板。例如上文例子中通常会选择<code>It was [mask].</code> 作为情感分析类的模板。人工构建方法虽然直观简单，但是致命问题也很突出。有相关工作在实验中发现，在同样的数据集和训练条件下， <strong>选择不同的Pattern和Verbalizer会产生差异很大的结果</strong> ，如下图所示（一般情况下，Template等同于Pattern，Verbalizer等同于Label word）：</p>
+<div align=center><img src="./assets/1-3-3.png" style="zoom:90%" ><img/></div>
+
+<hr />
+<p>从上图结果可发现，在相同Pattern时，选择不同的label word对结果影响很大，同理，不同的Pattern对结果影响也很明显，在真正应用中，调参者需要尝试多个不同的模板和标签词以穷举出最好的结果，并不能充分发挥Prompt简单快捷的优势。因此我们总结人工设计方法的缺陷：</p>
+<ul>
+<li>采用人工构建的方法成本高，需要与领域任务相关的先验知识；</li>
+<li>人工设计的Pattern和Verbalizer不能保证获得最优解，训练不稳定，不同的PVP对结果产生的差异明显，方差大；</li>
+<li>在预训练阶段MLM任务并非完全按照PVP的模式进行训练的（比如MLM训练通常都是长文本，mask的数量也并非只有1个，预测的概率分布也并非是有限的），因此人工构建的Pattern和Verbalizer使得Prompt-Tuning与MLM在语义和分布上依然存在差异。</li>
+</ul>
+<hr />
+<p>因此如何能够自动地挑选合适的PVP? 目前构建Verbalizer的方法也有很多，不过这里不进行详细解释，我们主要着重介绍构建Pattern的方法：<strong>Prompt-Tuning</strong>.接下来我们根据使用场景的不同，分别介绍几种成熟的Prompt-Tuning方法.</p>
+<hr />
+<h4 id="53-prompt-oriented-fine-tuning">5.3 Prompt-Oriented Fine-Tuning<a class="headerlink" href="#53-prompt-oriented-fine-tuning" title="Permanent link">&para;</a></h4>
+<p>Prompt-Oriented Fine-Tuning训练方法的本质是将目标任务转换为适应预训练模型的预训练任务，以适应预训练模型的学习体系。</p>
+<hr />
+<p>例如我们利用BERT模型来实现情感分类任务：</p>
+<p>传统Fine-Tuning方式: 将训练文本经过BERT编码后，生成向量表征，再利用该向量表征，连接全连接层，实现最终的情感类别识别。但是这种方式存在一个显式的弊端：预训练任务与下游任务存在gap。回忆BERT的预训练任务：MLM与NSP，简单来说，MLM任务是通过分类模型识别被MASK掉的词，类别大小即为整个词表大小；NSP任务是预测两个句子之间的关系。</p>
+<p>而Prompt-Oriented Fine-Tuning方式: 将情感分类任务转换为类似于MLM任务的[MASK]预测任务，具体来说，我们构建如下的prompt文本: prompt = It was [MASK]. 将prompt文本与输入文本text = The film is attractive.进行拼接生成: It was [MASK].The film is attractive.，输入预训练模型中，训练任务目标和MLM任务的目标一致，即识别被[MASK]掉的词。通过这种方式，可以将下游任务转换为和预训练任务较为一致的任务，实验证明，Prompt-Oriented Fine-Tuning相对于常规的Fine-Tuning，效果会得到明显提升（Prompt进行情感分类）。</p>
+<hr />
+<p>基于上述内容可以了解，在Prompt-Oriented Fine-Tuning方法中，预训练模型参数是可变的。其实将Prompt-Oriented Fine-Tuning方法放在Prompt-Tuning这个部分合理也不合理，因为它其实是Prompt-Tuning+Fine-Tuning的结合体，将它视为Fine-Tuning的升级版是最合适的。</p>
+<p>Prompt-Oriented Fine-Tuning方法在BERT类相对较小的模型上表现较好，但是随着模型越来越大，如果每次针对下游任务，都需要更新预训练模型的参数，资源成本及时间成本都会很高，因此后续陆续提出了不更新预训练模型参数，单纯只针对prompt进行调优的方法，例如**Hard Prompt**和**Soft Prompt**。</p>
+<hr />
+<p>下面是常见下游任务的Prompt设计：</p>
+<div align=center><img src="./assets/1-3-4.png" style="zoom:90%" ><img/></div>
+
+<hr />
+<h4 id="54-hard-prompt-soft-prompt">5.4 Hard Prompt &amp; Soft Prompt<a class="headerlink" href="#54-hard-prompt-soft-prompt" title="Permanent link">&para;</a></h4>
+<p>Hard Prompt (离散提示)：是一种固定的提示模板，通过将特定的关键词或短语(真实的文本字符串)直接嵌入到文本中，引导模型生成符合要求的文本。这种提示方法的特点在于，提示模板是固定的，不能根据不同的任务和需求进行调整。</p>
+<ul>
+<li>上述我们讲述的PET 是一种较为经典的硬模板方法，该方法主要思想：将问题建模成一个完形填空问题，然后优化最终的输出词。<strong>虽然 PET 也是在优化整个模型的参数</strong>，但是相比于传统的 Finetuning 方法，<strong>对数据量需求更少</strong>。</li>
+<li>但是硬模板产生依赖两种方式：根据经验的人工设计 &amp; 自动化搜索；从上图介绍中可以看出硬模板 对于prompt，改变prompt中的单个单词 会给实验结果带来巨大的差异， 所以也为后续优化提供了方向，如索性直接放弃硬模板，去优化 prompt token embedding即Soft Prompt。</li>
+</ul>
+<p>Soft Prompt (连续提示) ：是指通过给模型输入一个可参数化的提示模板，从而引导模型生成符合特定要求的文本。这种提示方法的特点在于，提示模板中的参数可以根据具体任务和需求进行调整，以达到最佳的生成效果。</p>
+<p>接下来，我们主要针对soft Prompt方式进行讲述：</p>
+<hr />
+<h5 id="541">5.4.1 连续提示模板<a class="headerlink" href="#541" title="Permanent link">&para;</a></h5>
+<p>Soft Prompt目的其将模板转换为可以进行优化的连续向量，换句话说，我们不需要显式地指定这些模板中各个token具体是什么，而只需要在语义空间中表示一个向量即可。</p>
+<hr />
+<p>这样，不同的任务、数据可以自适应地在语义空间中寻找若干合适的向量，来代表模板中的每一个词，相较于显式的token，这类token称为 <strong>伪标记（Pseudo Token）</strong> 。下面给出基于连续提示的模板定义：</p>
+<blockquote>
+<p>假设针对分类任务，给定一个输入句子<span class="arithmatex"><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span>，连续提示的模板可以定义为<span class="arithmatex"><span class="MathJax_Preview">T=[x],[v1],[v2],...,[vn][MASK]</span><script type="math/tex">T=[x],[v1],[v2],...,[vn][MASK]</script></span>：其中[v1]则是伪标记，其仅代表一个抽象的token，并没有实际的含义，本质上是一个向量。</p>
+<p>总结来说：Soft Prompt方法，是将模板变为可训练的参数，不同的样本可以在连续的向量空间中寻找合适的伪标记，同时也增加模型的泛化能力。因此，连续法需要引入少量的参数并在训练时进行参数更新，但预训练模型参数是不变的，变的是prompt token对应的词向量（Word Embedding）表征及其他引入的少量参数。</p>
+</blockquote>
+<hr />
+<p>目前基于连续提示的Prompt-Tuning的实现方法，以下列三篇论文为代表，分别作简要介绍：</p>
+<ul>
+<li>《The Power of Scale for Parameter-Efficient Prompt Tuning》：代表方法为Prompt Tuning</li>
+<li>《GPT Understands, Too》：代表方法为P-tuning</li>
+<li>《PPT: Pre-trained Prompt Tuning for Few-shot Learning》：代表方法PPT</li>
+</ul>
+<hr />
+<h5 id="542-prompt-tuningnlg">5.4.2 Prompt Tuning（NLG任务）<a class="headerlink" href="#542-prompt-tuningnlg" title="Permanent link">&para;</a></h5>
+<p>Prompt Tuning（基于T5模型来做的）方法为每一个输入文本假设一个固定前缀提示，该提示表由神经网络参数化，并在下游任务微调时进行更新，整个过程中预训练的大模型参数被冻结。</p>
+<div align=center><img src="./assets/3-1-1.png" style="zoom:60%" ><img/></div>
+
+<hr />
+<p>形式化的描述如下：</p>
+<blockquote>
+<p>给定 <span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span>个tokens，记作<span class="arithmatex"><span class="MathJax_Preview">x1, ...,xn</span><script type="math/tex">x1, ...,xn</script></span> ，通过一个预训练模型对应的embedding table，可以将<span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span>个token表示为一个向量矩阵<span class="arithmatex"><span class="MathJax_Preview">(X_e-&gt;R^{n*e})</span><script type="math/tex">(X_e->R^{n*e})</script></span>，其中<span class="arithmatex"><span class="MathJax_Preview">e</span><script type="math/tex">e</script></span>是向量的维度（其与预训练模型的配置有关，例如BERT-base是768）。连续模板中的每个伪标记<span class="arithmatex"><span class="MathJax_Preview">v_i</span><script type="math/tex">v_i</script></span>可以视为参数，也可以视为一个token，因此，可以通过另一个embedding table获得<span class="arithmatex"><span class="MathJax_Preview">p</span><script type="math/tex">p</script></span>个伪标记token标记为向量矩阵<span class="arithmatex"><span class="MathJax_Preview">(P_e-&gt;R^{p*e})</span><script type="math/tex">(P_e->R^{p*e})</script></span>，然后将文本和Prompt拼接获得新的输入<span class="arithmatex"><span class="MathJax_Preview">[P_e:X_e]-&gt;R^{(p+n)*e}</span><script type="math/tex">[P_e:X_e]->R^{(p+n)*e}</script></span>.这个新的输入将会喂入一个MLP获得新的表征。注意，只有prompt对应的向量表征参数P<span class="arithmatex"><span class="MathJax_Preview">(P_e-&gt;R^{p*e})</span><script type="math/tex">(P_e->R^{p*e})</script></span>会随着训练进行更新
+</p>
+</blockquote>
+<hr />
+<p>每个伪标记的初始化可以有下列几种情况：</p>
+<ul>
+<li>最简单的是随机初始化：即随机初始化一个面向所有伪标记的embedding table，可采用正态分布或者均匀分布等；</li>
+<li>每个token使用预训练模型已有的embedding table进行初始化，此时，每一个伪标记先随机指定词表中的一个词，并取对应词的embedding作为这个伪标记的初始化；</li>
+<li>在分类任务上，使用label word（verbalizer）对应的embedding作为初始化，可以有效限制模型输出的是预设的输出类对应的word。</li>
+</ul>
+<p>因此，在训练过程中，每个伪标记以及对应的MLP参数都可以得到训练，对于不同的输入句子 ，这些伪标记对应的embedding也各不相同，达到了预期的目的。</p>
+<p>Prompt Tuning特点：</p>
+<ul>
+<li>优点：</li>
+<li>大模型的微调新范式</li>
+<li>
+<p>模型参数规模大了之后，可以将大模型参数固定，指定附加参数来适配下游任务，而且适配性能基本和全参数微调相当。</p>
+</li>
+<li>
+<p>缺点：</p>
+</li>
+<li>在小样本学习场景上表现不太行</li>
+<li>收敛速度比较慢</li>
+<li>调参比较复杂</li>
+</ul>
+<h5 id="543-p-tuningnlu">5.4.3 P-tuning（NLU任务）<a class="headerlink" href="#543-p-tuningnlu" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p>P-tuning的详细内容请参考论文解读：GPT Understands, Too。</p>
+</blockquote>
+<p>P-tuning是另一个具有代表性的连续提示方法，主要针对的是NLU任务，方法图如下所示（图中的<span class="arithmatex"><span class="MathJax_Preview">P_i</span><script type="math/tex">P_i</script></span>等价于上文的<span class="arithmatex"><span class="MathJax_Preview">v_i</span><script type="math/tex">v_i</script></span> ，表示伪标记）, 谷歌于2021年发表。</p>
+<div align=center><img src="./assets/1-3-5.png" style="zoom:70%" ><img/></div>
+
+<hr />
+<p>P-Tuning方法中四个技巧点：</p>
+<ul>
+<li><strong>考虑到这些伪标记的相互依赖关系</strong> ：认为<span class="arithmatex"><span class="MathJax_Preview">[P_1]</span><script type="math/tex">[P_1]</script></span> 与 <span class="arithmatex"><span class="MathJax_Preview">[P_2]</span><script type="math/tex">[P_2]</script></span>是有先后关系的，而transformer无法显式地刻画这层关系，因此引入Prompt Encoder，实际过程中采用一层Bi-LSTM+两个前馈神经网络组成；</li>
+<li><strong>指定上下文词</strong> ：如果模板全部是伪标记，在训练时无法很好地控制这些模板朝着与对应句子相似的语义上优化，因此选定部分具有与当前句子语义代表性的一些词作为一些伪标记的初始化（例如上图中“capital”、“Britain”等）；</li>
+<li><strong>重参数（Reparameterization）</strong> ：具体到代码实现上，P-tuning先通过一个Prompt Encoder表征这些伪标记后，直接将这些新的表征覆盖到对应的embedding table上，换句话说，Prompt Encoder只在训练时候会使用到，而在推理阶段则不再使用。</li>
+<li><strong>混合提示（Hydride Prompt）</strong> ：将连续提示与离散token进行混合，例如<span class="arithmatex"><span class="MathJax_Preview">[x][it][v1][mask]</span><script type="math/tex">[x][it][v1][mask]</script></span></li>
+</ul>
+<hr />
+<p>P-Tuning V2是升级版本，该方法在模型的每一层都应用连续的 prompts 并对 prompts 参数进行更新优化。同时，该方法是也是针对 NLU 任务优化和适配的。</p>
+<div align=center><img src="./assets/1-3-9.png" style="zoom:70%" ><img/></div>
+
+<h5 id="544-pptpre-trained-prompt-tuning">5.4.4 PPT（Pre-trained Prompt Tuning）<a class="headerlink" href="#544-pptpre-trained-prompt-tuning" title="Permanent link">&para;</a></h5>
+<p>Prompt-Tuning通常适用于低资源场景，但是由于连续的模板是随机初始化的，即其存在新的参数，少量样本可能依然很难确保这些模板被很好地优化。因此简单的方法就是对这些连续的模板也进行预训练。PPT旨在通过先让这些连续提示在大量无标注的预训练语料进行预训练（注意，预训练过程中，Pre-train-model参数固定不变，只改变soft prompt），然后将其加载到对应下游任务的PLM上进行训练，如下图所示（图中的<span class="arithmatex"><span class="MathJax_Preview">P</span><script type="math/tex">P</script></span>即连续的提示模板，<span class="arithmatex"><span class="MathJax_Preview">&lt;X&gt;</span><script type="math/tex"><X></script></span>并表示为mask token）：</p>
+<div align=center><img src="./assets/1-3-6.png" style="zoom:70%" ><img/></div>
+
+<blockquote>
+<p>每一类任务都会预训练一个soft Prompt, 预训练后的soft Prompt可以直接运用到相似任务中</p>
+</blockquote>
+<ul>
+<li>首先在大量无标注语料上进行预训练，获得训练好的连续提示（初始化下游微调任务的soft prompt）；</li>
+<li>对下游任务（是非问答、NLI、文本匹配等），加载这些训练好的提示之后，进行微调，或者直接进行zero-shot预测。</li>
+</ul>
+<hr />
+<p>PPT的特点：</p>
+<ul>
+<li>优点：</li>
+<li>预训练soft-prompt带来了 小样本学习场景上的显著提升</li>
+<li>缓解了prompt-tuning收敛慢的问题</li>
+<li>缺点</li>
+<li>合并同类人物需要人工设计</li>
+</ul>
+<p>下图总结几种template优化进行的对比。</p>
+<div align=center><img src="./assets/1-3-7.png" style="zoom:90%" ><img/></div>
+
+<h3 id="_2">小结总结<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>本小节主要介绍了NLP发展的四种范式、Fine-Tuning以及Prompt-Tuning的基本思想和原理</li>
+<li>本章节内容详细了叙述了Prompt-Tuning主要代表方法</li>
+<li>分别对不同类型架构的代表模型如：BERT、GPT、T5等相关模型进行介绍</li>
+</ul>
+<hr />
+<hr />
+<hr />
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      
+        <script src="../js/extra.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>

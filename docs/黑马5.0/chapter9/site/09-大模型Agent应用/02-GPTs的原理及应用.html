@@ -1,0 +1,1644 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="01-%E5%A4%A7%E6%A8%A1%E5%9E%8BFunction%20Call%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8.html">
+      
+      
+        <link rel="next" href="03-Assistant%20API%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html">
+      
+      
+      <link rel="icon" href="../img/AI.jpg">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+    
+    
+      
+        <title>9.2 GPTs的原理及应用 - 大模型技术开发与应用V5.0</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gpts" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-header__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            大模型技术开发与应用V5.0
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              9.2 GPTs的原理及应用
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-nav__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    大模型技术开发与应用V5.0
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    1:大模型背景简介
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            1:大模型背景简介
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/01-LLM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.1 LLM基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/02-LLM%E4%B8%BB%E8%A6%81%E7%B1%BB%E5%88%AB%E6%9E%B6%E6%9E%84.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 LLM主要架构类别
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    2:主流大模型介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            2:主流大模型介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/01-GPT%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.1 GPT系列模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/02-LLM%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E4%BB%A3%E8%A1%A8%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.2 LLM主流开源代表模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    3:大模型提示词工程应用实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            3:大模型提示词工程应用实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.1 大模型Prompt工程指南
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/02-%E9%87%91%E8%9E%8D%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81%E6%96%B9%E5%90%91%E8%AF%84%E4%BC%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.2 金融行业动态方向评估项目介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/03-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.3 LLM实现金融文本分类
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/04-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.4 LLM实现金融文本信息抽取
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/05-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.5 LLM实现金融文本匹配
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    4:大模型微调主要方式
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            4:大模型微调主要方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt-Tuning%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.1 大模型Prompt-Tuning方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/02-%E5%A4%A7%E6%A8%A1%E5%9E%8BPEFT%E5%BE%AE%E8%B0%83%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.2 大模型PEFT微调方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    5:基于GPT2预训练模型搭建医疗问诊机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            5:基于GPT2预训练模型搭建医疗问诊机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-%E5%9F%BA%E4%BA%8EGPT2%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9E%E7%8E%B0.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5.1 医疗问诊机器人实现
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    6:新零售行业评价决策系统
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            6:新零售行业评价决策系统
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/01-%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.1 项目背景介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/02-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.2 BERT+PET方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/03-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.3 BERT+PET方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/04-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.4 BERT+PET方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/05-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.5 BERT+P-Tuning方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/06-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.6 BERT+P-Tuning方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/07-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.7 BERT+P-Tuning方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/01-%E9%A1%B9%E7%9B%AE%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.1 项目整体简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/02-%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.2 多任务数据预处理方式
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/03-LoRA%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.3 LoRA方式微调ChatGLM模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/%E8%B6%8B%E5%8A%A8%E4%BA%91%E4%BD%BF%E7%94%A8%E3%80%8A%E8%A1%A5%E5%85%85%E3%80%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.4 趋动云使用《扩展》
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6LangChain%E8%AF%A6%E8%A7%A3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.1 LangChain介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/02-LangChain%20%2B%20ChatGLM%20%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.2 LangChain+ChatGLM-6B实现本地知识库问答
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    9:大模型Agent的应用
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            9:大模型Agent的应用
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-%E5%A4%A7%E6%A8%A1%E5%9E%8BFunction%20Call%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.1 大模型functioncall的原理及其应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    9.2 GPTs的原理及应用
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="02-GPTs%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    9.2 GPTs的原理及应用
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-gpts" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 什么是GPTs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cozegpts" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 Coze平台（国产GPTs）
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Coze平台（国产GPTs）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-coze" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 如何使用Coze
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-coze" class="md-nav__link">
+    <span class="md-ellipsis">
+      3 Coze平台实践
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Coze平台实践">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 收集数据
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 创建知识库
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 创建知识库">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#321" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.1 自定义切分策略：添加本地学习笔记文档
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 搭建与使用 Bot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 发布到微信公众号
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-Assistant%20API%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.3 Assistant API的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-Agent%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.4 Agent原理介绍与应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-gpts" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 什么是GPTs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cozegpts" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 Coze平台（国产GPTs）
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2 Coze平台（国产GPTs）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-coze" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 如何使用Coze
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-coze" class="md-nav__link">
+    <span class="md-ellipsis">
+      3 Coze平台实践
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Coze平台实践">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 收集数据
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 创建知识库
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 创建知识库">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#321" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2.1 自定义切分策略：添加本地学习笔记文档
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 搭建与使用 Bot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 发布到微信公众号
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="gpts">GPTs的原理及应用<a class="headerlink" href="#gpts" title="Permanent link">&para;</a></h1>
+<h2 id="_1">学习目标<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li>理解什么是GPTs</li>
+<li>理解什么是Coze平台</li>
+<li>掌握基于Coze平台打造个人学习助手</li>
+</ul>
+<hr />
+<h2 id="1-gpts">1 什么是GPTs<a class="headerlink" href="#1-gpts" title="Permanent link">&para;</a></h2>
+<p>2023年11月，OpenAI 为旗下的 ChatGPT 推出了一项名为“GPTs”的服务，允许用户无需写代码就可以根据特定需求创建“属于自己的 ChatGPT 版本”，也就是基于 ChatGPT 创建定制化的个人 AI 助手。</p>
+<p>截止到2024年1月，已经有超过300万个性化ChatGPT诞生。</p>
+<p>GPT Store访问地址：<a href="https://chat.openai.com/gpts">https://chat.openai.com/gpts</a>，注意需要科学上网，以及当前只针对plus用户开通了使用权限。</p>
+<p><center><img src="./img/2-1.png" height="400" width="600"/></center></p>
+<h2 id="2-cozegpts">2 Coze平台（国产GPTs）<a class="headerlink" href="#2-cozegpts" title="Permanent link">&para;</a></h2>
+<p>Coze 是由字节跳动推出的一个AI聊天机器人和应用程序编辑开发平台，可以理解为字节跳动版的GPTs.</p>
+<p>Coze还提供了多种插件、知识、工作流、长期记忆和定时任务等功能，来增强聊天机器人的能力和交互性。而且你可以将搭建的 Bot 发布到各类社交平台和通讯软件上，让更多的用户与你搭建的 Bot 聊天。</p>
+<h3 id="21-coze">2.1 如何使用Coze<a class="headerlink" href="#21-coze" title="Permanent link">&para;</a></h3>
+<p>Coze（扣子）分为国内版和国外版：</p>
+<ul>
+<li>国内版访问地址：<a href="https://www.coze.cn/home">https://www.coze.cn/home</a>，背后大模型应用的是字节自研的云雀大模型、通义千问和kimi大模型</li>
+<li>国外版访问地址：<a href="https://www.coze.com/home">https://www.coze.com/home</a>，背后大模型应用的是GPT-3.5，GPT-4（在这是可以免费用GPT-4的），但是需要一些科学上网的方法。</li>
+</ul>
+<p>当前国外版的Coze的确比国内版的要有优势，主要体现在模型上：GPT-4&gt;GPT-3.5=kimi&gt;云雀大模型。但是国内版的一些功能也在不断地完善，而且不需要科学上网。因此接下来的教程就以国内版 Coze 来进行，也可以参考官网文档：<a href="https://www.coze.cn/docs/guides/welcome">https://www.coze.cn/docs/guides/welcome</a> 实现Coze平台的应用。</p>
+<h2 id="3-coze">3 Coze平台实践<a class="headerlink" href="#3-coze" title="Permanent link">&para;</a></h2>
+<p>案例：学习答疑助手</p>
+<p>本次利用Coze平台，我们将基于本地知识库快速搭建一个学习答疑bot，主要用于学习的时候帮助我们答疑解惑，并将该bot对接微信公众号，以方便我们咨询。</p>
+<h3 id="31">3.1 收集数据<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
+<p>为了实现学习答疑功能，需要收集一些知识资料，比如：学习笔记、课本知识等等。</p>
+<p>本次数据主要以学习笔记为主要内容.</p>
+<h3 id="32">3.2 创建知识库<a class="headerlink" href="#32" title="Permanent link">&para;</a></h3>
+<p>如下图所示，在Coze中创建知识库分为以下三个步骤:
+<center><img src="./img/2-2.png" height="260" width="700"/></center></p>
+<p>参考以下操作，完成知识库创建：</p>
+<ol>
+<li>登录<a href="https://www.coze.cn/home">扣子</a>。 </li>
+<li>选择一个工作区。 </li>
+<li>单击**知识库**页签，然后单击**创建知识库**。输入知识库名称，然后完成创建。</li>
+</ol>
+<p><center><img src="./img/2-3.png" height="300" width="740"/></center>
+对于不同的知识类型和内容存储方式，我们可以选择不同的导入方式和分段方式。</p>
+<h4 id="321">3.2.1 自定义切分策略：添加本地学习笔记文档<a class="headerlink" href="#321" title="Permanent link">&para;</a></h4>
+<p>学习笔记文档，通常会针对不同的知识点进行分块介绍，为了保证文档上传到知识库后可以按照不同模块进行拆分，我在每个模块标题前手动添加了###分隔符。如下图所示：</p>
+<p><center><img src="./img/2-5.png" height="300" width="400"/></center>
+接下来将该文档导入到扣子知识库中： </p>
+<ol>
+<li>在知识库页面，选择**文本格式**，然后单击**本地文档**。单击**下一步**。 </li>
+<li>选择学习笔记pdf文档，等待内容上传后，单击**下一步**。 </li>
+<li>选择**自定义**分段方式，分段标识符设置为###，长度设置为2000，然后单击**下一步**。</li>
+</ol>
+<p>上传后，单击单元名称查看分段情况。可以看到每个场景都是一个独立的内容片段。</p>
+<p><center><img src="./img/2-4.png" height="500" width="600"/></center></p>
+<h3 id="33-bot">3.3 搭建与使用 Bot<a class="headerlink" href="#33-bot" title="Permanent link">&para;</a></h3>
+<p>完成知识库内容上传后，就可以搭建学习答疑 Bot 了。</p>
+<ol>
+<li>
+<p>登录<a href="https://www.coze.cn/home">扣子</a>。 </p>
+</li>
+<li>
+<p>选择已经创建产品知识库的工作区。 </p>
+</li>
+<li>
+<p>在工作区内，单击 <strong>Bots</strong> 页签，然后单击**创建 Bot**。 </p>
+</li>
+<li>
+<p>输入 Bot 名称和说明，然后单击**确定**。</p>
+</li>
+<li>
+<p>完成 Bot 创建后，默认进入到 Bot 的编排页面。 </p>
+</li>
+<li>
+<p>在**人设与回复逻辑**中输入提示词。</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1"># 角色</span>
+<span class="n">你是一个专业的学习答疑小助手</span><span class="err">，</span><span class="n">能够精准透彻地理解用户的问题</span><span class="err">，</span><span class="n">然后从庞大的知识库中精准检索相关信息</span><span class="err">，</span><span class="n">进而为用户生成详尽准确的答案</span><span class="err">。</span>
+
+<span class="c1">## 技能</span>
+<span class="c1">### 技能 1: 深入理解问题</span>
+<span class="mf">1.</span> <span class="n">仔细剖析用户提出的问题</span><span class="err">，</span><span class="n">精准提取其中的关键信息</span><span class="err">。</span>
+<span class="c1">### 技能 2: 高效知识库检索</span>
+<span class="mf">1.</span> <span class="n">依据关键信息</span><span class="err">，</span><span class="n">在知识库中进行全面检索</span><span class="err">。</span>
+<span class="c1">### 技能 3: 智能搜索引擎查询</span>
+<span class="mf">1.</span> <span class="n">若根据关键信息</span><span class="err">，</span><span class="n">在知识库中未找到高度相关的知识</span><span class="err">，</span><span class="n">借助</span> <span class="n">bingWebSearch</span> <span class="n">搜索工具展开检索</span><span class="err">。</span>
+<span class="c1">### 技能 4: 精确回答生成</span>
+<span class="mf">1.</span> <span class="n">以检索到的信息为基础</span><span class="err">，</span><span class="n">为用户打造准确且简洁明了的回答</span><span class="err">。</span>
+
+<span class="c1">## 限制:</span>
+<span class="mf">1.</span> <span class="n">只回答与学习相关的问题</span><span class="err">，</span><span class="n">对无关话题不予理会</span><span class="err">。</span>
+<span class="mf">2.</span> <span class="n">尽量运用清晰简洁的语言回应用户的问题</span><span class="err">。</span>
+<span class="mf">3.</span> <span class="n">在整个回答过程中</span><span class="err">，</span><span class="n">始终将用户的需求置于核心位置</span><span class="err">。</span>
+</code></pre></div>
+<ol>
+<li>
+<p>找到知识 &gt;文本配置区，单击+添加已经创建的知识库。</p>
+</li>
+<li>
+<p>点击知识库配置上的自动调用选项，修改检索策略。</p>
+</li>
+</ol>
+<p><center><img src="./img/2-6.png" height="300" width="400"/></center></p>
+<ol>
+<li>
+<p>找到技能》插件，单击+添加现有的工具：bingWebSearch。</p>
+</li>
+<li>
+<p>完成配置后，在右侧调试面板中，输入一个问题查看 Bot 回复效果。如果回复内容不符合预期，展开运行完毕文本框，查看是否是知识库内容召回的不正确，可以根据知识库的召回情况调整知识库内容。调试没问题后，可单击发布将 Bot 发布到选择的渠道中，分发给其他用户使用。</p>
+</li>
+</ol>
+<p><center><img src="./img/2-7.png" height="400" width="500"/></center></p>
+<h3 id="34">3.4 发布到微信公众号<a class="headerlink" href="#34" title="Permanent link">&para;</a></h3>
+<p>如果发不到微信公众号，首先必须自己创建一个公众号，然后在进行公众号的配置，配置完点击发布即可。</p>
+<p><center><img src="./img/2-8.png" height="400" width="700"/></center></p>
+<p>公众号验证：点击立即对话，然后扫码即可登录公众号进行对话：</p>
+<p><center><img src="./img/2-9.png" height="200" width="800"/></center></p>
+<p>微信公众号对话演示：</p>
+<p><center><img src="./img/2-10.png" height="400" width="200"/></center></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      
+        <script src="../js/extra.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>

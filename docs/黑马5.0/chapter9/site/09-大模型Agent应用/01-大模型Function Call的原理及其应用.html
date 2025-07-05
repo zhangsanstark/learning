@@ -1,0 +1,2394 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/02-LangChain%20%2B%20ChatGLM%20%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94.html">
+      
+      
+        <link rel="next" href="02-GPTs%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html">
+      
+      
+      <link rel="icon" href="../img/AI.jpg">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+    
+    
+      
+        <title>9.1 大模型functioncall的原理及其应用 - 大模型技术开发与应用V5.0</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#function-call" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-header__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            大模型技术开发与应用V5.0
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              9.1 大模型functioncall的原理及其应用
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-nav__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    大模型技术开发与应用V5.0
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    1:大模型背景简介
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            1:大模型背景简介
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/01-LLM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.1 LLM基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/02-LLM%E4%B8%BB%E8%A6%81%E7%B1%BB%E5%88%AB%E6%9E%B6%E6%9E%84.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 LLM主要架构类别
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    2:主流大模型介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            2:主流大模型介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/01-GPT%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.1 GPT系列模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/02-LLM%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E4%BB%A3%E8%A1%A8%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.2 LLM主流开源代表模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    3:大模型提示词工程应用实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            3:大模型提示词工程应用实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.1 大模型Prompt工程指南
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/02-%E9%87%91%E8%9E%8D%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81%E6%96%B9%E5%90%91%E8%AF%84%E4%BC%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.2 金融行业动态方向评估项目介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/03-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.3 LLM实现金融文本分类
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/04-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.4 LLM实现金融文本信息抽取
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/05-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.5 LLM实现金融文本匹配
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    4:大模型微调主要方式
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            4:大模型微调主要方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt-Tuning%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.1 大模型Prompt-Tuning方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/02-%E5%A4%A7%E6%A8%A1%E5%9E%8BPEFT%E5%BE%AE%E8%B0%83%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.2 大模型PEFT微调方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    5:基于GPT2预训练模型搭建医疗问诊机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            5:基于GPT2预训练模型搭建医疗问诊机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-%E5%9F%BA%E4%BA%8EGPT2%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9E%E7%8E%B0.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5.1 医疗问诊机器人实现
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    6:新零售行业评价决策系统
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            6:新零售行业评价决策系统
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/01-%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.1 项目背景介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/02-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.2 BERT+PET方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/03-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.3 BERT+PET方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/04-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.4 BERT+PET方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/05-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.5 BERT+P-Tuning方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/06-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.6 BERT+P-Tuning方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/07-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.7 BERT+P-Tuning方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/01-%E9%A1%B9%E7%9B%AE%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.1 项目整体简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/02-%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.2 多任务数据预处理方式
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/03-LoRA%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.3 LoRA方式微调ChatGLM模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/%E8%B6%8B%E5%8A%A8%E4%BA%91%E4%BD%BF%E7%94%A8%E3%80%8A%E8%A1%A5%E5%85%85%E3%80%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.4 趋动云使用《扩展》
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6LangChain%E8%AF%A6%E8%A7%A3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.1 LangChain介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/02-LangChain%20%2B%20ChatGLM%20%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.2 LangChain+ChatGLM-6B实现本地知识库问答
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    9:大模型Agent的应用
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            9:大模型Agent的应用
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    9.1 大模型functioncall的原理及其应用
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="01-%E5%A4%A7%E6%A8%A1%E5%9E%8BFunction%20Call%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    9.1 大模型functioncall的原理及其应用
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 什么是Function Call
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 Function Call 工作原理
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3 Function Call 实践应用
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Function Call 实践应用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 定义外部函数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 描述函数功能
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 模型应用Function Call
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 模型应用Function Call">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#331-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.1创建 client
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#332" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.2 模型应用（第一次）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#333-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.3 定义处理 Function call 的函数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#334" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.4 模型应用（第二次）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Function Call应用完整代码
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 多个Functions的应用实践
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-function-callsql" class="md-nav__link">
+    <span class="md-ellipsis">
+      5 使用Function Call功能应用Sql查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6 小节总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-GPTs%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.2 GPTs的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-Assistant%20API%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.3 Assistant API的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-Agent%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.4 Agent原理介绍与应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      1 什么是Function Call
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      2 Function Call 工作原理
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3 Function Call 实践应用
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3 Function Call 实践应用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 定义外部函数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 描述函数功能
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 模型应用Function Call
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 模型应用Function Call">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#331-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.1创建 client
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#332" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.2 模型应用（第一次）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#333-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.3 定义处理 Function call 的函数
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#334" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3.4 模型应用（第二次）
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-function-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4 Function Call应用完整代码
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      4 多个Functions的应用实践
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-function-callsql" class="md-nav__link">
+    <span class="md-ellipsis">
+      5 使用Function Call功能应用Sql查询
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      6 小节总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="function-call">大模型Function Call的应用<a class="headerlink" href="#function-call" title="Permanent link">&para;</a></h1>
+<h2 id="_1">学习目标<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li>了解什么是Function Call</li>
+<li>理解Function Call工作的原理</li>
+<li>掌握Function Call开发应用的代码</li>
+</ul>
+<hr />
+<h2 id="1-function-call">1 什么是Function Call<a class="headerlink" href="#1-function-call" title="Permanent link">&para;</a></h2>
+<p>2023年6月13日 OpenAI 公布了 Function Call（函数调用） 功能，Function Call 允许开发者向 GPT-4 和 GPT-3.5-turbo 模型描述函数,模型会智能地选择输出一个包含调用这些函数参数的JSON对象。这是一种更可靠地将 GPT 的功能与外部工具和 API 相连接的新方法。 </p>
+<p>GPT4 及 GPT-3.5-turbo 模型之所以能够使用函数 Function Call 功能，是因为这些模型经过训练，不仅可以检测到何时需要调用函数（根据用户的输入），并且又可以回复符合函数参数的 JSON对象，而不是直接返回常规的文本，简而言之：函数调用使开发者能够更可靠地从模型中获得结构化数据。</p>
+<hr />
+<p>那么 Function Call 可以解决大模型什么问题：</p>
+<ul>
+<li><strong>信息实时性</strong>：大模型训练时使用的数据集往往有时间限制，无法包含最新的信息，如最新的新闻、实时股价等。通过Function Call，模型可以实时获取最新数据，提供更加时效的服务。</li>
+<li><strong>数据局限性</strong>：模型的训练数据量庞大但有限，无法覆盖所有可能的查询，如医学、法律等领域的专业咨询。Function Call允许模型调用外部数据库或API，获取特定领域的详细信息。</li>
+<li><strong>功能扩展性</strong>：大模型虽然功能强大，但不可能内置所有可能需要的功能。通过Function Call，可以轻松扩展模型能力，如调用外部工具进行复杂计算、数据分析等。</li>
+</ul>
+<p>总的来说，Function Call功能的出现，极大地提升了大型语言模型的实用性和灵活性，使其能够更好地服务于用户的各种需求。</p>
+<p>目前支持Function Call功能的模型除了GPT模型外，国内的模型也支持，如：百度文心一言，ChatGLM3-6B、讯飞星火3.0等。</p>
+<hr />
+<h2 id="2-function-call">2 Function Call 工作原理<a class="headerlink" href="#2-function-call" title="Permanent link">&para;</a></h2>
+<p>接下来，我们通过举例分别对比有无Function Call功能时GPT模型工作流程的差异：</p>
+<hr />
+<p>当没有函数调用(funciton-call)时候，我们调用GPT构建AI应用的模式非常简单。</p>
+<ul>
+<li>主要步骤：</li>
+<li>用户(client)发请求给我们的服务(chat server)</li>
+<li>我们的服务(chat server)给GPT提示词</li>
+<li>重复执行</li>
+</ul>
+<p><center><img src="./img/1-1.png" height="400" width="400"/></center></p>
+<hr />
+<p>当有函数调用(funciton-call)时候，我们调用GPT构建AI应用的模式比之前要复杂一些。</p>
+<ul>
+<li>主要步骤：</li>
+<li>用户(client)发请求提示词以及可以调用的函数给我们的服务(chat server)</li>
+<li>GPT模型根据用户的提示词，判断是用普通文本还是函数调用的格式响应我们的服务(chat server)</li>
+<li>如果是函数调用格式，那么Chat Server就会执行这个函数，并且将结果返回给GPT</li>
+<li>然后模型使用提供的数据，用连贯的文本响应。返回</li>
+</ul>
+<p><center><img src="./img/1-2.png" height="500" width="600"/></center></p>
+<hr />
+<p>需要注意的是，大模型的 Function call 不会执行任何函数调用，仅返回调用函数所需要的参数。开发者可以利用模型输出的参数在应用中执行函数调用。</p>
+<h2 id="3-function-call">3 Function Call 实践应用<a class="headerlink" href="#3-function-call" title="Permanent link">&para;</a></h2>
+<p>假设我们要创建一个具备查询实时天气的聊天机器人。</p>
+<h3 id="31">3.1 定义外部函数<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
+<ul>
+<li>查询某地的天气函数：get_current_weather(location: str)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">get_current_weather</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;得到给定地址的当前天气信息&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./cityCode_use.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="c1"># 使用 json.load() 函数加载 JSON 数据</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">city_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">weather_info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="n">loc</span><span class="p">[</span><span class="s2">&quot;市名&quot;</span><span class="p">]:</span>
+            <span class="n">city_code</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[</span><span class="s2">&quot;编码&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">city_code</span><span class="p">:</span>
+        <span class="n">weather_url</span> <span class="o">=</span> <span class="s2">&quot;http://t.weather.itboy.net/api/weather/city/&quot;</span> <span class="o">+</span> <span class="n">city_code</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">weather_url</span><span class="p">)</span>
+        <span class="n">result1</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">forecast</span> <span class="o">=</span> <span class="n">result1</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;forecast&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">weather_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+            <span class="s2">&quot;high_temperature&quot;</span><span class="p">:</span> <span class="n">forecast</span><span class="p">[</span><span class="s2">&quot;high&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;low_temperature&quot;</span><span class="p">:</span> <span class="n">forecast</span><span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;week&quot;</span><span class="p">:</span> <span class="n">forecast</span><span class="p">[</span><span class="s2">&quot;week&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">forecast</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">weather_info</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="32">3.2 描述函数功能<a class="headerlink" href="#32" title="Permanent link">&para;</a></h3>
+<ul>
+<li>为了向模型描述外部函数库，需要向 tools 字段传入可以调用的函数列表。参数如下表：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">参数名称</th>
+<th style="text-align: center;">类型</th>
+<th style="text-align: center;">是否必填</th>
+<th style="text-align: center;">参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">type</td>
+<td style="text-align: center;">String</td>
+<td style="text-align: center;">是</td>
+<td style="text-align: center;">设置为function</td>
+</tr>
+<tr>
+<td style="text-align: center;">function</td>
+<td style="text-align: center;">Object</td>
+<td style="text-align: center;">是</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">name</td>
+<td style="text-align: center;">String</td>
+<td style="text-align: center;">是</td>
+<td style="text-align: center;">函数名称</td>
+</tr>
+<tr>
+<td style="text-align: center;">description</td>
+<td style="text-align: center;">String</td>
+<td style="text-align: center;">是</td>
+<td style="text-align: center;">用于描述函数功能，模型会根据这段描述决定函数调用方式。</td>
+</tr>
+<tr>
+<td style="text-align: center;">parameters</td>
+<td style="text-align: center;">Object</td>
+<td style="text-align: center;">是</td>
+<td style="text-align: center;">parameters字段需要传入一个Json Schema对象，以准确地定义函数所接受的参数。若调用函数时不需要传入参数，省略该参数即可。</td>
+</tr>
+<tr>
+<td style="text-align: center;">required</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">否</td>
+<td style="text-align: center;">指定哪些属性在数据中必须被包含。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>样例：</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">tools</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_current_weather&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;获取给定位置的当前天气&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;城市或区，例如北京、海淀&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<hr />
+<h3 id="33-function-call">3.3 模型应用Function Call<a class="headerlink" href="#33-function-call" title="Permanent link">&para;</a></h3>
+<h4 id="331-client">3.3.1创建 client<a class="headerlink" href="#331-client" title="Permanent link">&para;</a></h4>
+<ul>
+<li>这里默认使用ZhipuAI，第一次注册免费赠送100万token，没有 key 可以自己去 <a href="https://open.bigmodel.cn/dev/howuse/functioncall">智普开发平台</a>注册一下。</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">zhupu_api</span> <span class="o">=</span> <span class="s2">&quot;494b*******************************&quot;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">ZhipuAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">zhupu_ak</span><span class="p">)</span> 
+</code></pre></div>
+<hr />
+<h4 id="332">3.3.2 模型应用（第一次）<a class="headerlink" href="#332" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>第一次模型得到回复时符合函数参数的 JSON对象</p>
+</li>
+<li>
+<p>比如：我们想查询"今天北京的天气如何？"。我们向模型提供这个信息：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">chat_completion_request</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4&quot;</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span>
+            <span class="n">tool_choice</span><span class="o">=</span><span class="n">tool_choice</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unable to generate ChatCompletion response&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">e</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span><span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个天气播报小助手，你需要根据用户提供的地址来回答当地的天气情况，如果用户提供的问题具有不确定性，不要自己编造内容，提示用户明确输入&quot;</span><span class="p">})</span>
+<span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;今天北京的天气如何?&quot;</span><span class="p">})</span>
+<span class="n">response</span><span class="o">=</span><span class="n">chat_completion_request</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span><span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span><span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;glm-4&quot;</span><span class="p">)</span>
+<span class="c1"># 模型返回结果：</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+<span class="c1"># {&#39;content&#39;: None, &#39;role&#39;: &#39;assistant&#39;, &#39;tool_calls&#39;:[{&#39;id&#39;:&#39;call_8688150014463468290&#39;, &#39;function&#39;: {&#39;arguments&#39;: &#39;{&quot;location&quot;:&quot;北京&quot;}&#39;, &#39;name&#39;: &#39;get_current_weather&#39;}, &#39;type&#39;: &#39;function&#39;}]}</span>
+</code></pre></div>
+<blockquote>
+<p>关于 tool_choice 如果不写，则默认情况下模型将决定何时适合使用其中一个函数。</p>
+<p>如果要控制模型如何选择函数调用，需要设置 tool_choice 参数。参数默认值为auto，此时模型根据上下文信息自行选择是否返回函数调用。</p>
+<p>若将其设置为 {"name": "your_function_name"} 时，可以强制 API 返回特定函数的调用。</p>
+<p>还可以通过将 tool_choice 参数设置为 "none" 来强制 API 不返回任何函数的调用。</p>
+</blockquote>
+<ul>
+<li>可以看到此时**模型成功触发对 get_current_weather 函数的应用** 参数为location=北京"。</li>
+</ul>
+<hr />
+<h4 id="333-function-call">3.3.3 定义处理 Function call 的函数<a class="headerlink" href="#333-function-call" title="Permanent link">&para;</a></h4>
+<ul>
+<li>本质 Function call，就是通过大模型选择函数以及获取函数的参数。然后进行函数的运行</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">parse_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="n">response_message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span>
+    <span class="c1"># 检测是否需要调用函数</span>
+    <span class="k">if</span> <span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+        <span class="c1"># 调用函数</span>
+        <span class="n">available_functions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;get_current_weather&quot;</span><span class="p">:</span> <span class="n">get_current_weather</span><span class="p">,</span>
+        <span class="p">}</span>  <span class="c1"># only one function test in this example, but you can have multiple</span>
+        <span class="n">function_name</span> <span class="o">=</span> <span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">fuction_to_call</span> <span class="o">=</span> <span class="n">available_functions</span><span class="p">[</span><span class="n">function_name</span><span class="p">]</span>
+        <span class="n">function_args</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="n">function_response</span> <span class="o">=</span> <span class="n">fuction_to_call</span><span class="p">(</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">function_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">function_response</span>
+</code></pre></div>
+<ul>
+<li>上述parse_response函数得到真实函数运行的结果</li>
+</ul>
+<h4 id="334">3.3.4 模型应用（第二次）<a class="headerlink" href="#334" title="Permanent link">&para;</a></h4>
+<ul>
+<li>基于上下文以及函数返回的结果，重新作为prompt输入模型，得到最终的结果</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    <span class="c1"># extend conversation with assistant&#39;s reply</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assistant_message</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>  
+    <span class="n">function_name</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;function_name--》</span><span class="si">{</span><span class="n">function_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">function_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;function_id--》</span><span class="si">{</span><span class="n">function_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">function_response</span> <span class="o">=</span> <span class="n">parse_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="c1"># extend conversation with function response</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="n">function_id</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">function_name</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">function_response</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>  
+    <span class="n">last_response</span> <span class="o">=</span> <span class="n">chat_completion_request</span><span class="p">(</span>
+        <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;last_response--》</span><span class="si">{</span><span class="n">last_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="34-function-call">3.4 Function Call应用完整代码<a class="headerlink" href="#34-function-call" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>该 Function Call 应用目的：创建一个具备查询实时天气的聊天机器人。</p>
+</li>
+<li>
+<p>完整代码包含两个部分：一个main.py、tools.py。另外还包含一个cityCode的json文件，该文件的目的是实现城市名称到城市编码的映射，因为天气接口API是只能基于编码的结果进行查询。</p>
+</li>
+</ul>
+<hr />
+<ul>
+<li>cityCode_use.json数据</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">&quot;市名&quot;</span><span class="p">:</span> <span class="s2">&quot;北京&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;编码&quot;</span><span class="p">:</span> <span class="s2">&quot;101010100&quot;</span>
+<span class="p">},</span>
+
+  <span class="p">{</span>
+    <span class="s2">&quot;市名&quot;</span><span class="p">:</span> <span class="s2">&quot;昌平&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;编码&quot;</span><span class="p">:</span> <span class="s2">&quot;101010700&quot;</span>
+<span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<hr />
+<ul>
+<li>tools.py完整代码</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_current_weather&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;获取给定位置的当前天气&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;城市或区，例如北京、海淀&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1"># todo:1.调用API接口，实现天气查询</span>
+<span class="k">def</span> <span class="nf">get_current_weather</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;得到给定地址的当前天气信息&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./cityCode_use.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="c1"># 使用 json.load() 函数加载 JSON 数据</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">city_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">weather_info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="n">loc</span><span class="p">[</span><span class="s2">&quot;市名&quot;</span><span class="p">]:</span>
+            <span class="n">city_code</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[</span><span class="s2">&quot;编码&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">city_code</span><span class="p">:</span>
+        <span class="n">weather_url</span> <span class="o">=</span> <span class="s2">&quot;http://t.weather.itboy.net/api/weather/city/&quot;</span> <span class="o">+</span> <span class="n">city_code</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">weather_url</span><span class="p">)</span>
+        <span class="n">result1</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">forecast</span> <span class="o">=</span> <span class="n">result1</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;forecast&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">weather_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+            <span class="s2">&quot;high_temperature&quot;</span><span class="p">:</span> <span class="n">forecast</span><span class="p">[</span><span class="s2">&quot;high&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;low_temperature&quot;</span><span class="p">:</span> <span class="n">forecast</span><span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;week&quot;</span><span class="p">:</span> <span class="n">forecast</span><span class="p">[</span><span class="s2">&quot;week&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">forecast</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">weather_info</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># todo: 2.根据模型回复来确定使用工具函数：</span>
+
+<span class="k">def</span> <span class="nf">parse_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="n">response_message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span>
+    <span class="c1"># 检测是否需要调用函数</span>
+    <span class="k">if</span> <span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+        <span class="c1"># 调用函数</span>
+        <span class="n">available_functions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;get_current_weather&quot;</span><span class="p">:</span> <span class="n">get_current_weather</span><span class="p">,</span>
+        <span class="p">}</span>  <span class="c1"># only one function test in this example, but you can have multiple</span>
+        <span class="n">function_name</span> <span class="o">=</span> <span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">fuction_to_call</span> <span class="o">=</span> <span class="n">available_functions</span><span class="p">[</span><span class="n">function_name</span><span class="p">]</span>
+        <span class="n">function_args</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="n">function_response</span> <span class="o">=</span> <span class="n">fuction_to_call</span><span class="p">(</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">function_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;location&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">function_response</span>
+</code></pre></div>
+<hr />
+<ul>
+<li>main.py主函数</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">find_dotenv</span>
+<span class="kn">from</span> <span class="nn">tools</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">zhipuai</span> <span class="kn">import</span> <span class="n">ZhipuAI</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">load_dotenv</span><span class="p">(</span><span class="n">find_dotenv</span><span class="p">())</span> <span class="c1"># 需要创建.env文件，存放zhupu_api</span>
+<span class="n">zhupu_ak</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;zhupu_api&#39;</span><span class="p">]</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">ZhipuAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">zhupu_ak</span><span class="p">)</span> <span class="c1"># 填写您自己的APIKey</span>
+<span class="n">ChatGLM</span> <span class="o">=</span> <span class="s2">&quot;glm-4&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">chat_completion_request</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">ChatGLM</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span>
+            <span class="n">tool_choice</span><span class="o">=</span><span class="n">tool_choice</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unable to generate ChatCompletion response&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">e</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;你是一个天气播报小助手，你需要根据用户提供的地址来回答当地的天气情况，如果用户提供的问题具有不确定性，不要自己编造内容，提示用户明确输入&quot;</span><span class="p">})</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;今天北京的天气如何&quot;</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">chat_completion_request</span><span class="p">(</span>
+        <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
+    <span class="p">)</span>
+    <span class="n">assistant_message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;assistant_message--&gt;</span><span class="si">{</span><span class="n">assistant_message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># extend conversation with assistant&#39;s reply</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assistant_message</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+    <span class="n">function_name</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;function_name--》</span><span class="si">{</span><span class="n">function_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">function_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;function_id--》</span><span class="si">{</span><span class="n">function_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">function_response</span> <span class="o">=</span> <span class="n">parse_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="n">function_id</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">function_name</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">function_response</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="p">)</span>  <span class="c1"># extend conversation with function response</span>
+    <span class="n">last_response</span> <span class="o">=</span> <span class="n">chat_completion_request</span><span class="p">(</span>
+        <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;last_response--》</span><span class="si">{</span><span class="n">last_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+<blockquote>
+<p>最终结果：last_response--》content='根据API调用结果，今天北京的天气情况如下：今天是星期五，北京有小雨，最高温度为21℃，最低温度为17℃。' role='assistant' tool_calls=None</p>
+</blockquote>
+<h2 id="4-functions">4 多个Functions的应用实践<a class="headerlink" href="#4-functions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>该 Function Call 应用目的：假设我们要创建一个具备查询航班功能的聊天机器人。</li>
+<li>
+<p>完整代码包含三个部分：一个muti_function_zhipu.py、airplane_function_tools.py、muti_utils.py。</p>
+</li>
+<li>
+<p>airplane_function_tools.py </p>
+</li>
+<li>定义需要的工具类函数：描述函数功能</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">tools</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_plane_number&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;根据始发地、目的地和日期，查询对应日期的航班号&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;出发地&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;目的地&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;日期&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">]</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;get_ticket_price&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;查询某航班在某日的价格&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;航班号&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;日期&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">]</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+</code></pre></div>
+<ul>
+<li>muti_utils.py</li>
+<li>定义两个外部函数供模型选择调用：查询两地之间某日航班号函数：get_flight_number(departure: str, destination: str, date: str)；查询某航班某日票价函数：get_ticket_price(flight_number: str, date: str)</li>
+<li>定义解析Function Call的函数</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+
+
+<span class="k">def</span> <span class="nf">get_plane_number</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">start</span> <span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="n">plane_number</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;北京&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;深圳&quot;</span><span class="p">:</span> <span class="s2">&quot;126&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;广州&quot;</span><span class="p">:</span> <span class="s2">&quot;356&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;郑州&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;北京&quot;</span><span class="p">:</span> <span class="s2">&quot;1123&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;天津&quot;</span><span class="p">:</span> <span class="s2">&quot;3661&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="n">plane_number</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="n">end</span><span class="p">]}</span>
+
+
+<span class="k">def</span> <span class="nf">get_ticket_price</span><span class="p">(</span><span class="n">date</span><span class="p">:</span><span class="nb">str</span> <span class="p">,</span> <span class="n">number</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;ticket_price&quot;</span><span class="p">:</span> <span class="s2">&quot;668&quot;</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">parse_function_call</span><span class="p">(</span><span class="n">model_response</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+
+<span class="sd">    :param model_response: 模型返回的结果</span>
+<span class="sd">    :return: 返回函数的结果</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">function_result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">model_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+        <span class="n">tool_call</span> <span class="o">=</span> <span class="n">model_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">tool_call</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span>
+        <span class="n">function_result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">tool_call</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;get_plane_number&quot;</span><span class="p">:</span>
+            <span class="n">function_result</span> <span class="o">=</span> <span class="n">get_plane_number</span><span class="p">(</span><span class="o">**</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">tool_call</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;get_ticket_price&quot;</span><span class="p">:</span>
+            <span class="n">function_result</span> <span class="o">=</span> <span class="n">get_ticket_price</span><span class="p">(</span><span class="o">**</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">function_result</span>
+</code></pre></div>
+<ul>
+<li>muti_function_zhipu.py</li>
+<li>主逻辑函数</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">zhipuai</span> <span class="kn">import</span> <span class="n">ZhipuAI</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">find_dotenv</span>
+<span class="kn">from</span> <span class="nn">muti_utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">airplane_function_tools</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">load_dotenv</span><span class="p">(</span><span class="n">find_dotenv</span><span class="p">())</span>
+<span class="c1"># 获取环境变量 ZhiPu_API_KEY</span>
+<span class="n">zhupu_ak</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;zhupu_api&#39;</span><span class="p">]</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">ZhipuAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">zhupu_ak</span><span class="p">)</span> <span class="c1"># 填写您自己的APIKey</span>
+<span class="n">ChatGLM</span> <span class="o">=</span> <span class="s2">&quot;glm-4&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">chat_completion_request</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">ChatGLM</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span>
+            <span class="n">tool_choice</span><span class="o">=</span><span class="n">tool_choice</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unable to generate ChatCompletion response&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">e</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;现在你是一个航班查询助手，将根据用户问题提供答案，但是不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要信息 &quot;</span><span class="p">})</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;帮我查询2024年4月2日，郑州到北京的航班的票价&quot;</span><span class="p">})</span>
+    <span class="c1"># 1.得到第一次回复：调用：get_plane_number函数</span>
+    <span class="n">first_response</span> <span class="o">=</span> <span class="n">chat_completion_request</span><span class="p">(</span>
+        <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+    <span class="n">assistant_message1</span> <span class="o">=</span> <span class="n">first_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;assistant_message1--&gt;</span><span class="si">{</span><span class="n">assistant_message1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># 2. 将第一次得到的模型回复结果加入messages</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">first_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+    <span class="c1"># 3. 第一次得到函数的结果</span>
+    <span class="n">first_function</span> <span class="o">=</span> <span class="n">parse_function_call</span><span class="p">(</span><span class="n">model_response</span><span class="o">=</span><span class="n">first_response</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;first_function--》</span><span class="si">{</span><span class="n">first_function</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">tool_call</span> <span class="o">=</span> <span class="n">first_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># 4. 将函数的结果添加到messages中，继续送入模型问答</span>
+
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="n">tool_call</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                     <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">first_function</span><span class="p">))})</span>
+    <span class="c1"># 5. 第二次调用模型</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="n">second_response</span> <span class="o">=</span> <span class="n">chat_completion_request</span><span class="p">(</span>
+        <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;second_response--》</span><span class="si">{</span><span class="n">second_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="c1"># 6. 将第二次得到函数结果加入信息中</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">second_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+    <span class="n">second_function</span> <span class="o">=</span> <span class="n">parse_function_call</span><span class="p">(</span><span class="n">model_response</span><span class="o">=</span><span class="n">second_response</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;second_function--》</span><span class="si">{</span><span class="n">second_function</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">tool2_call</span> <span class="o">=</span> <span class="n">second_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># 4. 将函数的结果添加到messages中，继续送入模型问答</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="n">tool2_call</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                     <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">second_function</span><span class="p">))})</span>
+
+    <span class="n">last_response</span> <span class="o">=</span> <span class="n">chat_completion_request</span><span class="p">(</span>
+        <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;last_response--》</span><span class="si">{</span><span class="n">last_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="5-function-callsql">5 使用Function Call功能应用Sql查询<a class="headerlink" href="#5-function-callsql" title="Permanent link">&para;</a></h2>
+<ul>
+<li>该 Function Call 应用目的：假设我们要创建一个具备sql语句查询的聊天机器人。</li>
+<li>完整代码包含三个部分：一个sql_function_tools.py、sql_zhipu.py。</li>
+<li>sql_function_tools.py</li>
+<li>定义需要的工具类函数：描述函数功能</li>
+<li>定义表的结构</li>
+<li>定义表查询的函数</li>
+<li>定义解析function call函数</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pymysql</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">find_dotenv</span>
+
+
+<span class="c1"># todo: 1.描述数据库表结构（单一个表格）</span>
+<span class="n">database_schema_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">  CREATE TABLE `emp` (</span>
+<span class="s2">  `empno` int DEFAULT NULL, --员工编号, 默认为空</span>
+<span class="s2">  `ename` varchar(50) DEFAULT NULL, --员工姓名, 默认为空</span>
+<span class="s2">  `job` varchar(50) DEFAULT NULL,--员工工作, 默认为空</span>
+<span class="s2">  `mgr` int DEFAULT NULL,--员工领导, 默认为空</span>
+<span class="s2">  `hiredate` date DEFAULT NULL,--员工入职日期, 默认为空</span>
+<span class="s2">  `sal` int DEFAULT NULL,--员工的月薪, 默认为空</span>
+<span class="s2">  `comm` int DEFAULT NULL,--员工年终奖, 默认为空</span>
+<span class="s2">  `deptno` int DEFAULT NULL,--员工部分编号, 默认为空</span>
+<span class="s2">)&quot;&quot;&quot;</span>
+
+
+<span class="c1"># todo: 2.描述数据库表结构（多个表格）</span>
+<span class="n">database_schema_string1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">CREATE TABLE `emp` (</span>
+<span class="s2">  `empno` int DEFAULT NULL, --员工编号, 默认为空</span>
+<span class="s2">  `ename` varchar(50) DEFAULT NULL, --员工姓名, 默认为空</span>
+<span class="s2">  `job` varchar(50) DEFAULT NULL,--员工工作, 默认为空</span>
+<span class="s2">  `mgr` int DEFAULT NULL,--员工领导, 默认为空</span>
+<span class="s2">  `hiredate` date DEFAULT NULL,--员工入职日期, 默认为空</span>
+<span class="s2">  `sal` int DEFAULT NULL,--员工的月薪, 默认为空</span>
+<span class="s2">  `comm` int DEFAULT NULL,--员工年终奖, 默认为空</span>
+<span class="s2">  `deptno` int DEFAULT NULL,--员工部分编号, 默认为空</span>
+<span class="s2">);</span>
+
+<span class="s2">CREATE TABLE `DEPT` (</span>
+<span class="s2">  `DEPTNO` int NOT NULL, -- 部门编码, 默认为空</span>
+<span class="s2">  `DNAME` varchar(14) DEFAULT NULL,--部门名称, 默认为空</span>
+<span class="s2">  `LOC` varchar(13) DEFAULT NULL,--地点, 默认为空</span>
+<span class="s2">  PRIMARY KEY (`DEPTNO`)</span>
+<span class="s2">);</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ask_database&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;使用此函数回答业务问题，要求输出是一个SQL查询语句&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;SQL查询提取信息以回答用户的问题。&quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;SQL应该使用以下数据库模式编写:</span><span class="si">{</span><span class="n">database_schema_string1</span><span class="si">}</span><span class="s2">&quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;查询应该以纯文本返回，而不是JSON。&quot;</span>
+                                       <span class="sa">f</span><span class="s2">&quot;查询应该只包含MySQL支持的语法。&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1"># todo:1.连接数据库，进行sql语句的查询</span>
+
+
+<span class="k">def</span> <span class="nf">ask_database</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;连接数据库，进行查询&quot;&quot;&quot;</span>
+    <span class="c1"># 1.连接到 MySQL 数据库</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;进入函数内部&quot;</span><span class="p">)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">pymysql</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+        <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="n">port</span><span class="o">=</span><span class="mi">3306</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s1">&#39;密码&#39;</span><span class="p">,</span>
+        <span class="n">database</span><span class="o">=</span><span class="s1">&#39;数据库名称&#39;</span><span class="p">,</span>
+        <span class="n">charset</span><span class="o">=</span><span class="s1">&#39;utf8mb4&#39;</span><span class="p">,</span>  <span class="c1"># 指定游标类，返回结果为字典</span>
+    <span class="p">)</span>
+    <span class="c1"># 2. 创建游标</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;开始测试&#39;</span><span class="p">)</span>
+    <span class="c1"># 3. 执行sql语句测试</span>
+    <span class="c1"># 示例：执行 SQL 查询</span>
+    <span class="c1"># sql = &quot;SELECT * FROM emp&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;query--》</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="c1"># 4. 获取查询结果</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+    <span class="c1"># 5.关闭游标</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="c1"># 6.关闭连接</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># # todo: 2.根据模型回复来确定使用工具函数：</span>
+
+
+<span class="k">def</span> <span class="nf">parse_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="n">response_message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span>
+    <span class="c1"># 检测是否需要调用函数</span>
+    <span class="k">if</span> <span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">:</span>
+        <span class="c1"># 调用函数</span>
+        <span class="n">available_functions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;ask_database&quot;</span><span class="p">:</span> <span class="n">ask_database</span>
+        <span class="p">}</span>  <span class="c1"># only one function test in this example, but you can have multiple</span>
+        <span class="n">function_name</span> <span class="o">=</span> <span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">fuction_to_call</span> <span class="o">=</span> <span class="n">available_functions</span><span class="p">[</span><span class="n">function_name</span><span class="p">]</span>
+        <span class="n">function_args</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response_message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="n">function_response</span> <span class="o">=</span> <span class="n">fuction_to_call</span><span class="p">(</span>
+            <span class="n">query</span><span class="o">=</span><span class="n">function_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">function_response</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;select count(*) from emp&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">ask_database</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>sql_zhipu.py</li>
+<li>主逻辑函数</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">zhipuai</span> <span class="kn">import</span> <span class="n">ZhipuAI</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span><span class="p">,</span> <span class="n">find_dotenv</span>
+<span class="kn">from</span> <span class="nn">sql_function_tools</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">load_dotenv</span><span class="p">(</span><span class="n">find_dotenv</span><span class="p">())</span>
+<span class="c1"># 获取环境变量 ZhiPu_API_KEY</span>
+<span class="n">zhupu_ak</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;zhupu_api&#39;</span><span class="p">]</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">ZhipuAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">zhupu_ak</span><span class="p">)</span> <span class="c1"># 填写您自己的APIKey</span>
+<span class="n">ChatGLM</span> <span class="o">=</span> <span class="s2">&quot;glm-4&quot;</span>
+
+<span class="k">def</span> <span class="nf">chat_completion_request</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">ChatGLM</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span>
+            <span class="n">tool_choice</span><span class="o">=</span><span class="n">tool_choice</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unable to generate ChatCompletion response&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">e</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;通过针对业务数据库生成 SQL 查询来回答用户的问题&quot;</span><span class="p">})</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;查询一下最高工资的员工姓名及对应的工资&quot;</span><span class="p">})</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">chat_completion_request</span><span class="p">(</span>
+        <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
+    <span class="p">)</span>
+    <span class="n">assistant_message</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;assistant_message1--&gt;</span><span class="si">{</span><span class="n">assistant_message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">function_name</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">function_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">tool_calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">function_response</span> <span class="o">=</span> <span class="n">parse_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;assistant_message.model_dump()--&gt;</span><span class="si">{</span><span class="n">assistant_message</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assistant_message</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>  <span class="c1"># extend conversation with assistant&#39;s reply</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;tool&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tool_call_id&quot;</span><span class="p">:</span> <span class="n">function_id</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">function_name</span><span class="p">,</span>
+            <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">function_response</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="p">)</span>  <span class="c1"># extend conversation with function response</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;messages--&gt;</span><span class="si">{</span><span class="n">messages</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">last_response</span> <span class="o">=</span> <span class="n">chat_completion_request</span><span class="p">(</span>
+        <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="n">tool_choice</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;last_response--》</span><span class="si">{</span><span class="n">last_response</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;last_response--》</span><span class="si">{</span><span class="n">last_response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="6">6 小节总结<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<p>本章节介绍了大模型 Function call 功能的基本概念和使用方法，包括定义外部函数、描述函数功能、代码编写等。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      
+        <script src="../js/extra.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>

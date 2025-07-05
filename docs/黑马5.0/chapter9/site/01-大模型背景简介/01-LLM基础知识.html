@@ -1,0 +1,1974 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="02-LLM%E4%B8%BB%E8%A6%81%E7%B1%BB%E5%88%AB%E6%9E%B6%E6%9E%84.html">
+      
+      
+      <link rel="icon" href="../img/AI.jpg">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+    
+    
+      
+        <title>1.1 LLM基础知识 - 大模型技术开发与应用V5.0</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#llm" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-header__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            大模型技术开发与应用V5.0
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1.1 LLM基础知识
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-nav__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    大模型技术开发与应用V5.0
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    1:大模型背景简介
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            1:大模型背景简介
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    1.1 LLM基础知识
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="01-LLM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    1.1 LLM基础知识
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      大语言模型 (LLM) 背景
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#language-model-lm" class="md-nav__link">
+    <span class="md-ellipsis">
+      语言模型 (Language Model, LM)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="语言模型 (Language Model, LM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#n-gram" class="md-nav__link">
+    <span class="md-ellipsis">
+      基于规则和统计的语言模型（N-gram）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      神经网络语言模型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      基于Transformer的预训练语言模型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      大语言模型
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      语言模型的评估指标
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="语言模型的评估指标">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bleu" class="md-nav__link">
+    <span class="md-ellipsis">
+      BLEU
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rouge" class="md-nav__link">
+    <span class="md-ellipsis">
+      ROUGE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pplperplexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      困惑度PPL(perplexity)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      小结总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-LLM%E4%B8%BB%E8%A6%81%E7%B1%BB%E5%88%AB%E6%9E%B6%E6%9E%84.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 LLM主要架构类别
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    2:主流大模型介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            2:主流大模型介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/01-GPT%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.1 GPT系列模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/02-LLM%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E4%BB%A3%E8%A1%A8%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.2 LLM主流开源代表模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    3:大模型提示词工程应用实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            3:大模型提示词工程应用实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.1 大模型Prompt工程指南
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/02-%E9%87%91%E8%9E%8D%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81%E6%96%B9%E5%90%91%E8%AF%84%E4%BC%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.2 金融行业动态方向评估项目介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/03-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.3 LLM实现金融文本分类
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/04-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.4 LLM实现金融文本信息抽取
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/05-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.5 LLM实现金融文本匹配
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    4:大模型微调主要方式
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            4:大模型微调主要方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt-Tuning%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.1 大模型Prompt-Tuning方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/02-%E5%A4%A7%E6%A8%A1%E5%9E%8BPEFT%E5%BE%AE%E8%B0%83%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.2 大模型PEFT微调方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    5:基于GPT2预训练模型搭建医疗问诊机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            5:基于GPT2预训练模型搭建医疗问诊机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-%E5%9F%BA%E4%BA%8EGPT2%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E6%90%AD%E5%BB%BA%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9E%E7%8E%B0.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5.1 医疗问诊机器人实现
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    6:新零售行业评价决策系统
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            6:新零售行业评价决策系统
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/01-%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.1 项目背景介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/02-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.2 BERT+PET方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/03-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.3 BERT+PET方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/04-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.4 BERT+PET方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/05-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.5 BERT+P-Tuning方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/06-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.6 BERT+P-Tuning方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/07-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.7 BERT+P-Tuning方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/01-%E9%A1%B9%E7%9B%AE%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.1 项目整体简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/02-%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.2 多任务数据预处理方式
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/03-LoRA%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.3 LoRA方式微调ChatGLM模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/%E8%B6%8B%E5%8A%A8%E4%BA%91%E4%BD%BF%E7%94%A8%E3%80%8A%E8%A1%A5%E5%85%85%E3%80%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.4 趋动云使用《扩展》
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6LangChain%E8%AF%A6%E8%A7%A3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.1 LangChain介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/02-LangChain%20%2B%20ChatGLM%20%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.2 LangChain+ChatGLM-6B实现本地知识库问答
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    9:大模型Agent的应用
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            9:大模型Agent的应用
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BFunction%20Call%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.1 大模型functioncall的原理及其应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/02-GPTs%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.2 GPTs的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/03-Assistant%20API%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.3 Assistant API的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/04-Agent%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.4 Agent原理介绍与应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      大语言模型 (LLM) 背景
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#language-model-lm" class="md-nav__link">
+    <span class="md-ellipsis">
+      语言模型 (Language Model, LM)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="语言模型 (Language Model, LM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#n-gram" class="md-nav__link">
+    <span class="md-ellipsis">
+      基于规则和统计的语言模型（N-gram）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      神经网络语言模型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      基于Transformer的预训练语言模型
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      大语言模型
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      语言模型的评估指标
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="语言模型的评估指标">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bleu" class="md-nav__link">
+    <span class="md-ellipsis">
+      BLEU
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rouge" class="md-nav__link">
+    <span class="md-ellipsis">
+      ROUGE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pplperplexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      困惑度PPL(perplexity)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      小结总结
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="llm">LLM背景知识介绍<a class="headerlink" href="#llm" title="Permanent link">&para;</a></h1>
+<hr />
+<h3 id="_1">学习目标<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>了解LLM背景的知识.</li>
+<li>掌握什么是语言模型</li>
+</ul>
+<hr />
+<h3 id="llm_1">大语言模型 (LLM) 背景<a class="headerlink" href="#llm_1" title="Permanent link">&para;</a></h3>
+<p>大语言模型 (英文：Large Language Model，缩写LLM) 是一种人工智能模型, 旨在理解和生成人类语言. 大语言模型可以处理多种自然语言任务，如文本分类、问答、翻译、对话等等.</p>
+<div align=center><img src="../img/1-01.png" style="zoom:70%" ><img/></div>
+
+<p>通常, 大语言模型 (LLM) 是指包含数千亿 (或更多) 参数的语言模型(目前定义参数量超过10B的模型为大语言模型)，这些参数是在大量文本数据上训练的，例如模型 GPT-3、ChatGPT、PaLM、BLOOM和 LLaMA等.</p>
+<hr />
+<p>截止23年3月底，语言模型发展走过了三个阶段：</p>
+<ul>
+<li><strong>第一阶段</strong> ：设计一系列的自监督训练目标（MLM、NSP等），设计新颖的模型架构（Transformer），遵循Pre-training和Fine-tuning范式。典型代表是BERT、GPT、XLNet等；</li>
+<li><strong>第二阶段</strong> ：逐步扩大模型参数和训练语料规模，探索不同类型的架构。典型代表是BART、T5、GPT-3等；</li>
+<li><strong>第三阶段</strong> ：走向AIGC（Artificial Intelligent Generated Content）时代，模型参数规模步入千万亿，模型架构为自回归架构，大模型走向对话式、生成式、多模态时代，更加注重与人类交互进行对齐，实现可靠、安全、无毒的模型。典型代表是InstructionGPT、ChatGPT、Bard、GPT-4等。</li>
+</ul>
+<hr />
+<h3 id="language-model-lm">语言模型 (Language Model, LM)<a class="headerlink" href="#language-model-lm" title="Permanent link">&para;</a></h3>
+<p>语言模型（Language Model）旨在建模词汇序列的生成概率，提升机器的语言智能水平，使机器能够模拟人类说话、写作的模式进行自动文本输出。</p>
+<p>通俗理解:  用来计算一个句子的概率的模型，也就是判断一句话是否是人话的概率.</p>
+<p>标准定义：对于某个句子序列, 如S = {W1, W2, W3, …, Wn}, 语言模型就是计算该序列发生的概率, 即P(S). 如果给定的词序列符合语用习惯, 则给出高概率, 否则给出低概率. </p>
+<hr />
+<p>举例说明：</p>
+<ul>
+<li>假设我们要为中文创建一个语言模型，<span class="arithmatex"><span class="MathJax_Preview">V</span><script type="math/tex">V</script></span>表示词典，<span class="arithmatex"><span class="MathJax_Preview">V</span><script type="math/tex">V</script></span>={黑马、程序、员、来、学习}​，<span class="arithmatex"><span class="MathJax_Preview">W_i</span><script type="math/tex">W_i</script></span> 属于<span class="arithmatex"><span class="MathJax_Preview">V</span><script type="math/tex">V</script></span>。语言模型描述：给定词典<span class="arithmatex"><span class="MathJax_Preview">V</span><script type="math/tex">V</script></span>, 能够计算出任意单词序列<span class="arithmatex"><span class="MathJax_Preview">S={W_1,W_2,W_3,…,W_n}</span><script type="math/tex">S={W_1,W_2,W_3,…,W_n}</script></span>是一句话的概率<span class="arithmatex"><span class="MathJax_Preview">P(S)</span><script type="math/tex">P(S)</script></span>, 其中<span class="arithmatex"><span class="MathJax_Preview">P &gt;= 0</span><script type="math/tex">P >= 0</script></span></li>
+<li>那么如何计算一个句子的<span class="arithmatex"><span class="MathJax_Preview">P(S)</span><script type="math/tex">P(S)</script></span>呢？最简单的方法就是计数，假设数据集中共有<span class="arithmatex"><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>个句子，我们可以统计一下数据集中<span class="arithmatex"><span class="MathJax_Preview">S={W_1,W_2,W_3,…,W_n}</span><script type="math/tex">S={W_1,W_2,W_3,…,W_n}</script></span>每个句子出现的次数，如果假设为<span class="arithmatex"><span class="MathJax_Preview">n</span><script type="math/tex">n</script></span>，则<span class="arithmatex"><span class="MathJax_Preview">P(S)=\frac{n}{N}</span><script type="math/tex">P(S)=\frac{n}{N}</script></span>. 那么可以想象一下，这个模型的预测能力几乎为0，一旦单词序列没在之前数据集中出现过，模型的输出概率就是0，显然相当不合理。</li>
+<li>我们可以根据概率论中的链式法则，将<span class="arithmatex"><span class="MathJax_Preview">P</span><script type="math/tex">P</script></span>可以表示为：</li>
+</ul>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+P(S) = P(W_1, W_2, ....,W_n) = P(W_1)*P(W_2|W_1)*....*P(W_n|W_1, W_2, ....,W_{n-1})
+</div>
+<script type="math/tex; mode=display">
+P(S) = P(W_1, W_2, ....,W_n) = P(W_1)*P(W_2|W_1)*....*P(W_n|W_1, W_2, ....,W_{n-1})
+</script>
+</div>
+<ul>
+<li>
+<p>如果能计算<span class="arithmatex"><span class="MathJax_Preview">P(W_n|W_1,W_2,…W_{n-1})</span><script type="math/tex">P(W_n|W_1,W_2,…W_{n-1})</script></span>，那么就能轻松得到<span class="arithmatex"><span class="MathJax_Preview">P(W_1,W_2,…,W_n)</span><script type="math/tex">P(W_1,W_2,…,W_n)</script></span>, 所以在某些文献中，我们也可以看到语言模型的另外一个定义：能够计算出<span class="arithmatex"><span class="MathJax_Preview">P(W_1,W_2,…,W_n)</span><script type="math/tex">P(W_1,W_2,…,W_n)</script></span>的模型就是语言模型。</p>
+</li>
+<li>
+<p>从文本生成角度，也可以这样定义语言模型：给定一个短语（一个词组或者一句话），语言模型可以生成（预测）接下来的一个词。</p>
+</li>
+</ul>
+<hr />
+<p>语言模型技术的发展可以总结为四个阶段：</p>
+<ul>
+<li>基于规则和统计的语言模型</li>
+<li>神经语言模型</li>
+<li>预训练语言模型</li>
+<li>大语言模型</li>
+</ul>
+<hr />
+<h4 id="n-gram">基于规则和统计的语言模型（N-gram）<a class="headerlink" href="#n-gram" title="Permanent link">&para;</a></h4>
+<p>由人工设计特征并使用统计方法对固定长度的文本窗口序列进行建模分析，这种建模方式也被称为N-gram语言模型。在上述例子中计算句子序列概率我们使用链式法则计算， 该方法存在两个缺陷：</p>
+<ul>
+<li>参数空间过大：条件概率<span class="arithmatex"><span class="MathJax_Preview">P(W_n|W_1, W_2,….W_n)</span><script type="math/tex">P(W_n|W_1, W_2,….W_n)</script></span>的可能性太多，无法估算，也不一定有用</li>
+<li>数据稀疏严重：许多词对的组合，在语料库中都没有出现，依据最大似然估计得到的概率为0</li>
+</ul>
+<hr />
+<p>为了解决上述问题，引入马尔科夫假设：随意一个词出现的概率只与它前面出现的有限的一个或者几个词有关。</p>
+<ul>
+<li>如果一个词的出现与它周围的词是独立的，那么我们就称之为unigram也就是一元语言模型.</li>
+</ul>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+P(S) = P(W_1)*P(W_2)*....*P(W_n)
+</div>
+<script type="math/tex; mode=display">
+P(S) = P(W_1)*P(W_2)*....*P(W_n)
+</script>
+</div>
+<ul>
+<li>如果一个词的出现仅依赖于它前面出现的一个词，那么我们就称之为bigram.</li>
+</ul>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+P(S) = P(W_1)*P(W_2|W_1)*P(W_3|W_2)*...*P(W_n|W_{n-1})
+</div>
+<script type="math/tex; mode=display">
+P(S) = P(W_1)*P(W_2|W_1)*P(W_3|W_2)*...*P(W_n|W_{n-1})
+</script>
+</div>
+<ul>
+<li>如果一个词的出现仅依赖于它前面出现的两个词，那么我们就称之为trigram.</li>
+</ul>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+P(S) = P(W_1)*P(W_2|W_1)*P(W_3|W_2,W_1)*...*P(W_n|W_{n-1},W_{n-2})
+</div>
+<script type="math/tex; mode=display">
+P(S) = P(W_1)*P(W_2|W_1)*P(W_3|W_2,W_1)*...*P(W_n|W_{n-1},W_{n-2})
+</script>
+</div>
+<p>一般来说，N元模型就是假设当前词的出现概率只与它前面的N-1个词有关，而这些概率参数都是可以通过大规模语料库来计算，比如三元概率：
+$$
+P(W_i|W_{i-1},W_{i-2}) = Count(W_{i-2}W_{i-1}W_i)/Count(W_{i-2}W_{i-1})
+$$</p>
+<hr />
+<p>在实践中用的最多的就是bigram和trigram，接下来以bigram语言模型为例，理解其工作原理：</p>
+<ul>
+<li>首先我们准备一个语料库（简单理解让模型学习的数据集），为了计算对应的二元模型的参数，即<span class="arithmatex"><span class="MathJax_Preview">P(W_i|W_{i-1})</span><script type="math/tex">P(W_i|W_{i-1})</script></span>，我们要先计数即<span class="arithmatex"><span class="MathJax_Preview">C(W_{i-1},W_i)</span><script type="math/tex">C(W_{i-1},W_i)</script></span>，然后计数 <span class="arithmatex"><span class="MathJax_Preview">C(W_{i-1})</span><script type="math/tex">C(W_{i-1})</script></span> , 再用除法可得到概率。</li>
+<li><span class="arithmatex"><span class="MathJax_Preview">C(W_{i-1}, W_i)</span><script type="math/tex">C(W_{i-1}, W_i)</script></span> 计数结果如下：</li>
+</ul>
+<div align=center><img src="./img/2-03.png" style="zoom:40%" ><img/></div>
+
+<ul>
+<li><span class="arithmatex"><span class="MathJax_Preview">C(W_{i-1})</span><script type="math/tex">C(W_{i-1})</script></span> 的计数结果如下：</li>
+</ul>
+<div align=center><img src="./img/2-04.png" style="zoom:40%" ><img/></div>
+
+<ul>
+<li>
+<p>那么bigram语言模型针对上述语料的参数计算结果如何实现？假如，我想计算<span class="arithmatex"><span class="MathJax_Preview">P(想｜我)\approx0.38</span><script type="math/tex">P(想｜我)\approx0.38</script></span> ,计算过程如下显示：（其他参数计算过程类似）
+  $$
+  P(想｜我) = \frac{C(我,想)}{C(我)} = \frac{800}{2100}\approx0.38
+  $$</p>
+</li>
+<li>
+<p>如果针对这个语料库的二元模型（bigram）建立好之后，就可以实现我们的目标计算。</p>
+</li>
+<li>
+<p>计算一个句子的概率，举例如下：</p>
+</li>
+<li>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+  P(我想去打篮球) = P(想｜我)*P(去｜想)*P(打｜去)*P(篮球｜打)=\frac{800}{2100}*\frac{600}{900}*\frac{690}{2000}*\frac{20}{800} \approx0.0022
+  </div>
+<script type="math/tex; mode=display">
+  P(我想去打篮球) = P(想｜我)*P(去｜想)*P(打｜去)*P(篮球｜打)=\frac{800}{2100}*\frac{600}{900}*\frac{690}{2000}*\frac{20}{800} \approx0.0022
+  </script>
+</div>
+</li>
+<li>
+<p>预测一句话最可能出现的下一个词汇，比如：我想去打【mask】? 思考：mask = 篮球 或者 mask = 晚饭</p>
+</li>
+</ul>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+P(我想去打篮球) =  \approx0.0022
+</div>
+<script type="math/tex; mode=display">
+P(我想去打篮球) =  \approx0.0022
+</script>
+</div>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+P(我想去打晚饭) =\approx0.00022
+</div>
+<script type="math/tex; mode=display">
+P(我想去打晚饭) =\approx0.00022
+</script>
+</div>
+<ul>
+<li>可以看出<span class="arithmatex"><span class="MathJax_Preview">P(我想去打篮球) &gt; P(我想去打晚饭)</span><script type="math/tex">P(我想去打篮球) > P(我想去打晚饭)</script></span>，因此mask = 篮球，对比真实语境下，也符合人类习惯。</li>
+</ul>
+<p>N-gram语言模型的特点：</p>
+<ul>
+<li>优点：采用极大似然估计, 参数易训练; 完全包含了前n-1个词的全部信息; 可解释性强, 直观易理解。</li>
+<li>缺点：缺乏长期以来，只能建模到前n-1个词; 随着n的增大，参数空间呈指数增长3.数据稀疏，难免会出现OOV问题; 单纯的基于统计频次，泛化能力差.</li>
+</ul>
+<hr />
+<h4 id="_2">神经网络语言模型<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h4>
+<p>基于N-gram语言模型以上的问题，以及随着神经网络技术的发展，人们开始尝试使用神经网络来建立语言模型。</p>
+<div align=center><img src="./img/2-09.png" style="zoom:50%" ><img/></div>
+
+<ul>
+<li>模型的输入：<span class="arithmatex"><span class="MathJax_Preview">w_{t-n+1}, …, w_{t-2}, w_{t-1}</span><script type="math/tex">w_{t-n+1}, …, w_{t-2}, w_{t-1}</script></span>就是前n-1个词。现在需要根据这已知的n-1个词预测下一个词<span class="arithmatex"><span class="MathJax_Preview">w_t</span><script type="math/tex">w_t</script></span>。<span class="arithmatex"><span class="MathJax_Preview">C(w)</span><script type="math/tex">C(w)</script></span>表示<span class="arithmatex"><span class="MathJax_Preview">w</span><script type="math/tex">w</script></span>所对应的词向量.</li>
+<li>网络的第一层（输入层）是将<span class="arithmatex"><span class="MathJax_Preview">C(w_{t-n+1}),…,C(w_{t-2}), C(w_{t-1})</span><script type="math/tex">C(w_{t-n+1}),…,C(w_{t-2}), C(w_{t-1})</script></span>这n-1个向量首尾拼接起来形成一个<span class="arithmatex"><span class="MathJax_Preview">(n-1)*m</span><script type="math/tex">(n-1)*m</script></span>大小的向量，记作<span class="arithmatex"><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span>.</li>
+<li>网络的第二层（隐藏层）就如同普通的神经网络，直接使用一个全连接层, 通过全连接层后再使用<span class="arithmatex"><span class="MathJax_Preview">tanh</span><script type="math/tex">tanh</script></span>这个激活函数进行处理。</li>
+<li>网络的第三层（输出层）一共有<span class="arithmatex"><span class="MathJax_Preview">V</span><script type="math/tex">V</script></span>个节点 (<span class="arithmatex"><span class="MathJax_Preview">V</span><script type="math/tex">V</script></span> 代表语料的词汇)，本质上这个输出层也是一个全连接层。每个输出节点<span class="arithmatex"><span class="MathJax_Preview">y_i</span><script type="math/tex">y_i</script></span>表示下一个词语为 <span class="arithmatex"><span class="MathJax_Preview">i</span><script type="math/tex">i</script></span> 的未归一化log 概率。最后使用 softmax 激活函数将输出值<span class="arithmatex"><span class="MathJax_Preview">y</span><script type="math/tex">y</script></span>进行归一化。得到最大概率值，就是我们需要预测的结果。</li>
+</ul>
+<p>神经网络特点：</p>
+<ul>
+<li>优点：利用神经网络去建模当前词出现的概率与其前 n-1 个词之间的约束关系，很显然这种方式相比 n-gram 具有更好的泛化能力，只要词表征足够好。从而很大程度地降低了数据稀疏带来的问题。</li>
+<li>缺点：对长序列的建模能力有限，可能会出现长距离遗忘以及训练时的梯度消失等问题，构建的模型难以进行稳定的长文本输出。</li>
+</ul>
+<hr />
+<h4 id="transformer">基于Transformer的预训练语言模型<a class="headerlink" href="#transformer" title="Permanent link">&para;</a></h4>
+<div align=center><img src="./assets/1-1-2.png" style="zoom:80%" ><img/></div>
+
+<p>Transformer模型由一些编码器和解码器层组成（见图），学习复杂语义信息的能力强，很多主流预训练模型在提取特征时都会选择Transformer结构，并产生了一系列的基于Transformer的预训练模型，包括GPT、BERT、T5等.这些模型能够从大量的通用文本数据中学习大量的语言表示，并将这些知识运用到下游任务中，获得了较好的效果.</p>
+<hr />
+<p>预训练语言模型的使用方式：</p>
+<ul>
+<li>1.预训练：预训练指建立基本的模型，先在一些比较基础的数据集、语料库上进行训练，然后按照具体任务训练，学习数据的普遍特征。</li>
+<li>2.微调：微调指在具体的下游任务中使用预训练好的模型进行迁移学习，以获取更好的泛化效果。</li>
+</ul>
+<p>预训练语言模型的特点：</p>
+<ul>
+<li>优点：更强大的泛化能力，丰富的语义表示，可以有效防止过拟合。</li>
+<li>缺点：计算资源需求大，可解释性差等</li>
+</ul>
+<hr />
+<h4 id="_3">大语言模型<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h4>
+<p>随着对预训练语言模型研究的开展，人们逐渐发现可能存在一种标度定律（Scaling Law），即随着预训练模型参数的指数级提升，其语言模型性能也会线性上升。2020年，OpenAI发布了参数量高达1750亿的GPT-3，首次展示了大语言模型的性能。</p>
+<p>相较于此前的参数量较小的预训练语言模型，例如，3.3亿参数的Bert-large和17亿参数的GPT-2，GPT-3展现了在Few-shot语言任务能力上的飞跃，并具备了预训练语言模型不具备的一些能力。后续将这种现象称为能力涌现。例如，GPT-3能进行上下文学习，在不调整权重的情况下仅依据用户给出的任务示例完成后续任务。这种能力方面的飞跃引发研究界在大语言模型上的研究热潮，各大科技巨头纷纷推出参数量巨大的语言模型，例如，Meta公司1300亿参数量的LLaMA模型以及谷歌公司5400亿参数量的PaLM。国内如百度推出的文心一言ERNIE系列、清华大学团队推出的GLM系列，等等。</p>
+<hr />
+<p>大语言模型的特点：</p>
+<ul>
+<li>优点：像“人类”一样智能，具备了能与人类沟通聊天的能力，甚至具备了使用插件进行自动信息检索的能力</li>
+<li>缺点：参数量大，算力要求高、生成部分有害的、有偏见的内容等等</li>
+</ul>
+<hr />
+<h3 id="_4">语言模型的评估指标<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h4 id="bleu">BLEU<a class="headerlink" href="#bleu" title="Permanent link">&para;</a></h4>
+<p>BLEU：BLEU （双语评估替补）分数是评估一种语言翻译成另一种语言的文本质量的指标。它将“质量”的好坏定义为与人类翻译结果的一致性程度。</p>
+<p>BLEU算法实际上就是在判断两个句子的相似程度. BLEU 的分数取值范围是 0～1，分数越接近1，说明翻译的质量越高。</p>
+<p>BLEU有许多变种，根据<code>n-gram</code>可以划分成多种评价指标，常见的评价指标有BLEU-1、BLEU-2、BLEU-3、BLEU-4四种，其中<code>n-gram</code>指的是连续的单词个数为n，BLEU-1衡量的是单词级别的准确性，更高阶的BLEU可以衡量句子的流畅性.实践中，通常是取N=1~4，然后对进行加权平均</p>
+<hr />
+<p>下面举例说计算过程：</p>
+<ul>
+<li>基本步骤：</li>
+<li>分别计算candidate句和reference句的N-grams模型，然后统计其匹配的个数，计算匹配度:</li>
+<li>
+<p>公式：candidate和reference中匹配的 n−gram 的个数 /candidate中n−gram 的个数</p>
+</li>
+<li>
+<p>假设机器翻译的译文candidate和一个参考翻译reference如下：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="na">candidate</span><span class="o">:</span><span class="w"> </span><span class="s">It is a nice day today</span>
+<span class="na">reference</span><span class="o">:</span><span class="w"> </span><span class="s">Today is a nice day</span>
+</code></pre></div>
+<ul>
+<li>使用1-gram进行匹配</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="na">candidate</span><span class="o">:</span><span class="w"> </span><span class="s">{it, is, a, nice, day, today}</span>
+<span class="na">reference</span><span class="o">:</span><span class="w"> </span><span class="s">{today, is, a, nice, day}</span>
+<span class="na">结果</span><span class="o">:</span>
+<span class="w">    </span><span class="na">其中{today,</span><span class="w"> </span><span class="s">is, a, nice, day}匹配，所以匹配度为5/6</span>
+</code></pre></div>
+- 使用2-gram进行匹配</p>
+<div class="highlight"><pre><span></span><code><span class="na">candidate</span><span class="o">:</span><span class="w"> </span><span class="s">{it is, is a, a nice, nice day, day today}</span>
+<span class="na">reference</span><span class="o">:</span><span class="w"> </span><span class="s">{today is, is a, a nice, nice day}</span>
+<span class="na">结果</span><span class="o">:</span>
+<span class="w">    </span><span class="na">其中{is</span><span class="w"> </span><span class="s">a, a nice, nice day}匹配，所以匹配度为3/5</span>
+</code></pre></div>
+<ul>
+<li>使用3-gram进行匹配</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="na">candidate</span><span class="o">:</span><span class="w"> </span><span class="s">{it is a, is a nice, a nice day, nice day today}</span>
+<span class="na">reference</span><span class="o">:</span><span class="w"> </span><span class="s">{today is a, is a nice, a nice day}</span>
+
+<span class="na">结果</span><span class="o">:</span>
+<span class="w">    </span><span class="na">其中{is</span><span class="w"> </span><span class="s">a nice, a nice day}匹配，所以匹配度为2/4</span>
+</code></pre></div>
+<ul>
+<li>使用4-gram进行匹配</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="na">candidate</span><span class="o">:</span><span class="w"> </span><span class="s">{it is a nice, is a nice day, a nice day today}</span>
+<span class="na">reference</span><span class="o">:</span><span class="w"> </span><span class="s">{today is a nice, is a nice day}</span>
+
+<span class="na">结果</span><span class="o">:</span>
+<span class="w">    </span><span class="na">其中{is</span><span class="w"> </span><span class="s">a nice day}匹配，所以匹配度为1/3</span>
+</code></pre></div>
+<hr />
+<p>通过上面的例子分析可以发现，匹配的个数越多，BLEU值越大，则说明候选句子更好. 但是也会出现下面的极端情况：</p>
+<ul>
+<li>举例说明：</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="na">candidate</span><span class="o">:</span><span class="w"> </span><span class="s">the the the the</span>
+<span class="na">reference</span><span class="o">:</span><span class="w"> </span><span class="s">The cat is standing on the ground</span>
+<span class="na">如果按照1-gram的方法进行匹配，则匹配度为1，显然是不合理的，所以计算某个词的出现次数进行改进</span>
+</code></pre></div>
+<ul>
+<li>将计算某个词的出现次数的方法改为计算**某个词在译文中出现的最小次数**,如下所示的公式：</li>
+</ul>
+<div class="arithmatex">
+<div class="MathJax_Preview">
+count_k=min(c_k,s_k)
+</div>
+<script type="math/tex; mode=display">
+count_k=min(c_k,s_k)
+</script>
+</div>
+<ul>
+<li>其中<span class="arithmatex"><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span>表示在机器译文（candidate）中出现的第<span class="arithmatex"><span class="MathJax_Preview">k</span><script type="math/tex">k</script></span>个词语, <span class="arithmatex"><span class="MathJax_Preview">c_k</span><script type="math/tex">c_k</script></span>则代表在机器译文中这个词语出现的次数，而<span class="arithmatex"><span class="MathJax_Preview">s_k</span><script type="math/tex">s_k</script></span>则代表在人工译文（reference）中这个词语出现的次数。</li>
+</ul>
+<hr />
+<p>python代码实现：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 第一步安装nltk的包--&gt;pip install nltk</span>
+<span class="kn">from</span> <span class="nn">nltk.translate.bleu_score</span> <span class="kn">import</span> <span class="n">sentence_bleu</span>
+
+<span class="k">def</span> <span class="nf">cumulative_bleu</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">candidate</span><span class="p">):</span>
+
+    <span class="n">bleu_1_gram</span> <span class="o">=</span> <span class="n">sentence_bleu</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">bleu_2_gram</span> <span class="o">=</span> <span class="n">sentence_bleu</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">bleu_3_gram</span> <span class="o">=</span> <span class="n">sentence_bleu</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">(</span><span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">bleu_4_gram</span> <span class="o">=</span> <span class="n">sentence_bleu</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">))</span>
+
+    <span class="c1"># print(&#39;bleu 1-gram: %f&#39; % bleu_1_gram)</span>
+    <span class="c1"># print(&#39;bleu 2-gram: %f&#39; % bleu_2_gram)</span>
+    <span class="c1"># print(&#39;bleu 3-gram: %f&#39; % bleu_3_gram)</span>
+    <span class="c1"># print(&#39;bleu 4-gram: %f&#39; % bleu_4_gram)</span>
+
+    <span class="k">return</span> <span class="n">bleu_1_gram</span><span class="p">,</span> <span class="n">bleu_2_gram</span><span class="p">,</span> <span class="n">bleu_3_gram</span><span class="p">,</span> <span class="n">bleu_4_gram</span>
+
+<span class="c1"># 生成文本</span>
+<span class="n">generated_text</span> <span class="o">=</span> <span class="s2">&quot;This is some generated text.&quot;</span>
+
+<span class="c1"># 参考文本列表</span>
+<span class="n">reference_texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;This is a reference text.&quot;</span><span class="p">,</span> <span class="s2">&quot;This is another reference text.&quot;</span><span class="p">]</span>
+
+<span class="c1"># 计算 Bleu 指标</span>
+<span class="n">c_bleu</span> <span class="o">=</span> <span class="n">cumulative_bleu</span><span class="p">(</span><span class="n">reference_texts</span><span class="p">,</span> <span class="n">generated_text</span><span class="p">)</span>
+
+<span class="c1"># 打印结果</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The Bleu score is:&quot;</span><span class="p">,</span> <span class="n">c_bleu</span><span class="p">)</span>
+<span class="c1"># The Bleu score is: (0.8571, 0.6900, 0.5711, 0.4920)</span>
+</code></pre></div>
+<h4 id="rouge">ROUGE<a class="headerlink" href="#rouge" title="Permanent link">&para;</a></h4>
+<p>ROUGE指标是在机器翻译、自动摘要、问答生成等领域常见的评估指标。ROUGE通过将模型生成的摘要或者回答与参考答案（一般是人工生成的）进行比较计算，得到对应的得分。</p>
+<p>ROUGE指标与BLEU指标非常类似，均可用来衡量生成结果和标准结果的匹配程度，不同的是ROUGE基于召回率，BLEU更看重准确率。</p>
+<p>ROUGE分为四种方法：ROUGE-N, ROUGE-L, ROUGE-W, ROUGE-S.</p>
+<hr />
+<p>下面举例说计算过程（这里只介绍ROUGE_N）：</p>
+<ul>
+<li>基本步骤：</li>
+<li>
+<p>Rouge-N实际上是将模型生成的结果和标准结果按N-gram拆分后，计算召回率</p>
+</li>
+<li>
+<p>假设模型生成的文本candidate和一个参考文本reference如下：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="na">candidate</span><span class="o">:</span><span class="w"> </span><span class="s">It is a nice day today</span>
+<span class="na">reference</span><span class="o">:</span><span class="w"> </span><span class="s">Today is a nice day</span>
+</code></pre></div>
+<ul>
+<li>使用ROUGE-1进行匹配</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="na">candidate</span><span class="o">:</span><span class="w"> </span><span class="s">{it, is, a, nice, day, today}</span>
+<span class="na">reference</span><span class="o">:</span><span class="w"> </span><span class="s">{today, is, a, nice, day}</span>
+<span class="na">结果</span><span class="o">:</span>
+<span class="w">    </span><span class="o">:</span><span class="s">其中{today, is, a, nice, day}匹配，所以匹配度为5/5=1,这说明生成的内容完全覆盖了参考文本中的所有单词，质量较高。</span>
+</code></pre></div>
+<p>通过类似的方法，可以计算出其他ROUGE指标（如ROUGE-2、ROUGE-L、ROUGE-S）的评分，从而综合评估系统生成的文本质量。</p>
+<hr />
+<p>python代码实现：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 第一步：安装rouge--&gt;pip install rouge</span>
+<span class="kn">import</span> <span class="nn">Rouge</span>
+
+<span class="c1"># 生成文本</span>
+<span class="n">generated_text</span> <span class="o">=</span> <span class="s2">&quot;This is some generated text.&quot;</span>
+
+<span class="c1"># 参考文本列表</span>
+<span class="n">reference_texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;This is a reference text.&quot;</span><span class="p">,</span> <span class="s2">&quot;This is another generated reference text.&quot;</span><span class="p">]</span>
+
+<span class="c1"># 计算 ROUGE 指标</span>
+<span class="n">rouge</span> <span class="o">=</span> <span class="n">Rouge</span><span class="p">()</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">rouge</span><span class="o">.</span><span class="n">get_scores</span><span class="p">(</span><span class="n">generated_text</span><span class="p">,</span> <span class="n">reference_texts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># 打印结果</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ROUGE-1 precision:&quot;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;rouge-1&quot;</span><span class="p">][</span><span class="s2">&quot;p&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ROUGE-1 recall:&quot;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;rouge-1&quot;</span><span class="p">][</span><span class="s2">&quot;r&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ROUGE-1 F1 score:&quot;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;rouge-1&quot;</span><span class="p">][</span><span class="s2">&quot;f&quot;</span><span class="p">])</span>
+<span class="c1"># ROUGE-1 precision: 0.8</span>
+<span class="c1"># ROUGE-1 recall: 0.6666666666666666</span>
+<span class="c1"># ROUGE-1 F1 score: 0.7272727223140496</span>
+</code></pre></div>
+<hr />
+<h4 id="pplperplexity">困惑度PPL(perplexity)<a class="headerlink" href="#pplperplexity" title="Permanent link">&para;</a></h4>
+<p>PPL用来度量一个概率分布或概率模型预测样本的好坏程度。</p>
+<p>PPL基本思想:</p>
+<ul>
+<li>给测试集的句子赋予较高概率值的语言模型较好,当语言模型训练完之后，测试集中的句子都是正常的句子，那么训练好的模型就是在测试集上的概率越高越好.</li>
+<li>基本公式（两种方式）：</li>
+</ul>
+<div align=center><img src="./assets/1-1-3.png" style="zoom:80%" ><img/></div>
+
+<div align=center><img src="./assets/1-1-4.png" style="zoom:80%" ><img/></div>
+
+<ul>
+<li>由公式可知，<strong>句子概率越大，语言模型越好，迷惑度越小。</strong></li>
+</ul>
+<hr />
+<p>python代码实现：</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">math</span>
+<span class="c1"># 定义语料库</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="p">[</span>
+<span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;have&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;pen&#39;</span><span class="p">],</span>
+<span class="p">[</span><span class="s1">&#39;He&#39;</span><span class="p">,</span> <span class="s1">&#39;has&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;book&#39;</span><span class="p">],</span>
+<span class="p">[</span><span class="s1">&#39;She&#39;</span><span class="p">,</span> <span class="s1">&#39;has&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">]</span>
+<span class="p">]</span>
+<span class="c1"># 定义语言模型</span>
+<span class="n">unigram</span> <span class="o">=</span> <span class="p">{</span>
+<span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="mi">11</span><span class="p">,</span>
+<span class="s1">&#39;have&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="mi">11</span><span class="p">,</span>
+<span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="o">/</span><span class="mi">11</span><span class="p">,</span>
+<span class="s1">&#39;pen&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="mi">11</span><span class="p">,</span>
+<span class="s1">&#39;He&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="mi">11</span><span class="p">,</span>
+<span class="s1">&#39;has&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="o">/</span><span class="mi">11</span><span class="p">,</span>
+<span class="s1">&#39;book&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="mi">11</span><span class="p">,</span>
+<span class="s1">&#39;She&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="mi">11</span><span class="p">,</span>
+<span class="s1">&#39;cat&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="mi">11</span>
+<span class="p">}</span>
+<span class="c1"># 计算困惑度</span>
+<span class="n">perplexity</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
+    <span class="n">sentence_prob</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">sentence</span><span class="p">:</span>
+        <span class="n">sentence_prob</span> <span class="o">*=</span> <span class="n">unigram</span><span class="p">[</span><span class="n">word</span><span class="p">]</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sentence_prob</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+    <span class="n">perplexity</span><span class="o">+=</span><span class="mi">2</span><span class="o">**</span><span class="n">temp</span>     
+<span class="n">perplexity</span> <span class="o">=</span> <span class="n">perplexity</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;困惑度为：&#39;</span><span class="p">,</span> <span class="n">perplexity</span><span class="p">)</span>
+<span class="c1"># 困惑度为： 7.47</span>
+</code></pre></div>
+<h3 id="_5">小结总结<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>本小节主要介绍LLM的背景知识，了解目前LLM发展基本历程</li>
+<li>对语言模型的类别分别进行了介绍，如基于统计的N-gram模型，以及深度学习的神经网络模型</li>
+</ul>
+<hr />
+<hr />
+<hr />
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      
+        <script src="../js/extra.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>

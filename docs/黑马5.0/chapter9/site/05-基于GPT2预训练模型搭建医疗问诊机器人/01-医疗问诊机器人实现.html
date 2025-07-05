@@ -1,0 +1,2409 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/02-%E5%A4%A7%E6%A8%A1%E5%9E%8BPEFT%E5%BE%AE%E8%B0%83%E6%96%B9%E6%B3%95.html">
+      
+      
+        <link rel="next" href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/01-%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D.html">
+      
+      
+      <link rel="icon" href="../img/AI.jpg">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.24">
+    
+    
+      
+        <title>5.1 医疗问诊机器人实现 - 大模型技术开发与应用V5.0</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gpt2" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-header__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            大模型技术开发与应用V5.0
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5.1 医疗问诊机器人实现
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="大模型技术开发与应用V5.0" class="md-nav__button md-logo" aria-label="大模型技术开发与应用V5.0" data-md-component="logo">
+      
+  <img src="../img/AI.jpg" alt="logo">
+
+    </a>
+    大模型技术开发与应用V5.0
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    1:大模型背景简介
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            1:大模型背景简介
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/01-LLM%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.1 LLM基础知识
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%8C%E6%99%AF%E7%AE%80%E4%BB%8B/02-LLM%E4%B8%BB%E8%A6%81%E7%B1%BB%E5%88%AB%E6%9E%B6%E6%9E%84.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1.2 LLM主要架构类别
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    2:主流大模型介绍
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            2:主流大模型介绍
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/01-GPT%E7%B3%BB%E5%88%97%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.1 GPT系列模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-%E4%B8%BB%E6%B5%81%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D/02-LLM%E4%B8%BB%E6%B5%81%E5%BC%80%E6%BA%90%E4%BB%A3%E8%A1%A8%E6%A8%A1%E5%9E%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2.2 LLM主流开源代表模型
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    3:大模型提示词工程应用实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            3:大模型提示词工程应用实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt%E5%B7%A5%E7%A8%8B%E6%8C%87%E5%8D%97.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.1 大模型Prompt工程指南
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/02-%E9%87%91%E8%9E%8D%E8%A1%8C%E4%B8%9A%E5%8A%A8%E6%80%81%E6%96%B9%E5%90%91%E8%AF%84%E4%BC%B0%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.2 金融行业动态方向评估项目介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/03-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.3 LLM实现金融文本分类
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/04-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.4 LLM实现金融文本信息抽取
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E5%BA%94%E7%94%A8%E5%AE%9E%E6%88%98/05-LLM%E5%AE%9E%E7%8E%B0%E9%87%91%E8%9E%8D%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3.5 LLM实现金融文本匹配
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    4:大模型微调主要方式
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            4:大模型微调主要方式
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BPrompt-Tuning%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.1 大模型Prompt-Tuning方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E4%B8%BB%E8%A6%81%E6%96%B9%E5%BC%8F/02-%E5%A4%A7%E6%A8%A1%E5%9E%8BPEFT%E5%BE%AE%E8%B0%83%E6%96%B9%E6%B3%95.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4.2 大模型PEFT微调方法
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    5:基于GPT2预训练模型搭建医疗问诊机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            5:基于GPT2预训练模型搭建医疗问诊机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    5.1 医疗问诊机器人实现
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="01-%E5%8C%BB%E7%96%97%E9%97%AE%E8%AF%8A%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9E%E7%8E%B0.html" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    5.1 医疗问诊机器人实现
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      项目背景
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      环境准备
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      项目整体结构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 数据介绍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 数据介绍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-xlsx" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 儿科疾病问诊信息.xlsx
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.数据处理
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.数据处理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 数据格式转换
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 数据张量转换
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 数据张量再次封装
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 数据张量再次封装">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#231-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.1 封装DataSet对象
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#232-dataloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.2 封装DataLoader对象
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 模型搭建
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 模型搭建">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 模型架构介绍
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-gpt2" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 GPT2模型准备
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 模型训练和验证
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 模型预测（人机交互）
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    6:新零售行业评价决策系统
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            6:新零售行业评价决策系统
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/01-%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.1 项目背景介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/02-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.2 BERT+PET方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/03-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.3 BERT+PET方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/04-BERT%2BPET%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.4 BERT+PET方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/05-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.5 BERT+P-Tuning方式文本分类介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/06-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.6 BERT+P-Tuning方式数据预处理
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-%E6%96%B0%E9%9B%B6%E5%94%AE%E8%A1%8C%E4%B8%9A%E8%AF%84%E4%BB%B7%E5%86%B3%E7%AD%96%E7%B3%BB%E7%BB%9F/07-BERT%2BP-Tuning%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    6.7 BERT+P-Tuning方式模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            7:基于ChatGLM微调实现信息抽取+文本分类的多任务实战
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/01-%E9%A1%B9%E7%9B%AE%E6%95%B4%E4%BD%93%E4%BB%8B%E7%BB%8D.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.1 项目整体简介
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/02-%E5%A4%9A%E4%BB%BB%E5%8A%A1%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.2 多任务数据预处理方式
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/03-LoRA%E6%96%B9%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%AE%AD%E7%BB%83.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.3 LoRA方式微调ChatGLM模型代码实现和训练
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E5%9F%BA%E4%BA%8EChatGLM%E5%BE%AE%E8%B0%83%E5%AE%9E%E7%8E%B0%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%96%2B%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E7%9A%84%E5%A4%9A%E4%BB%BB%E5%8A%A1%E5%AE%9E%E6%88%98/%E8%B6%8B%E5%8A%A8%E4%BA%91%E4%BD%BF%E7%94%A8%E3%80%8A%E8%A1%A5%E5%85%85%E3%80%8B.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    7.4 趋动云使用《扩展》
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            8:基于LangChain+ChatGLM-6B实现本地知识RAG问答机器人
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/01-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6LangChain%E8%AF%A6%E8%A7%A3.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.1 LangChain介绍
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-%E5%9F%BA%E4%BA%8ELangChain%2BChatGLM%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E9%97%AE%E7%AD%94%E6%9C%BA%E5%99%A8%E4%BA%BA/02-LangChain%20%2B%20ChatGLM%20%E5%AE%9E%E7%8E%B0%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E9%97%AE%E7%AD%94.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8.2 LangChain+ChatGLM-6B实现本地知识库问答
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    9:大模型Agent的应用
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            9:大模型Agent的应用
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/01-%E5%A4%A7%E6%A8%A1%E5%9E%8BFunction%20Call%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.1 大模型functioncall的原理及其应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/02-GPTs%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.2 GPTs的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/03-Assistant%20API%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.3 Assistant API的原理及应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-%E5%A4%A7%E6%A8%A1%E5%9E%8BAgent%E5%BA%94%E7%94%A8/04-Agent%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%BA%94%E7%94%A8.html" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    9.4 Agent原理介绍与应用
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      学习目标
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      项目背景
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      环境准备
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      项目整体结构
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 数据介绍
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 数据介绍">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-xlsx" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 儿科疾病问诊信息.xlsx
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.数据处理
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.数据处理">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 数据格式转换
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 数据张量转换
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3 数据张量再次封装
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 数据张量再次封装">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#231-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.1 封装DataSet对象
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#232-dataloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3.2 封装DataLoader对象
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 模型搭建
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 模型搭建">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 模型架构介绍
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-gpt2" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 GPT2模型准备
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 模型训练和验证
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 模型预测（人机交互）
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="gpt2">基于GPT2搭建医疗问诊机器人<a class="headerlink" href="#gpt2" title="Permanent link">&para;</a></h1>
+<hr />
+<h3 id="_1">学习目标<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>理解医疗问诊机器人的开发背景.</li>
+<li>了解企业中聊天机器人的应用场景</li>
+<li>掌握基于GPT2模型搭建医疗问诊机器人的实现过程</li>
+</ul>
+<hr />
+<h3 id="_2">项目背景<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>聊天机器人是一种基于自然语言处理技术的智能对话系统，能够模拟人类的自然语言交流，与用户进行对话和互动。聊天机器人能够理解用户的问题或指令，并给出相应的回答或建议。其目标是提供友好、智能、自然的对话体验. </p>
+</li>
+<li>
+<p>当前，聊天机器人在多个领域得到广泛应用。首先，它们常用于在线客服系统，能够快速、准确地回答用户的常见问题，解决疑问。其次，聊天机器人可以作为个人助手，提供个性化的推荐、建议和日程安排等服务，提升用户体验。此外，聊天机器人还被应用于社交娱乐、语言学习、旅游指南等领域，为用户提供有趣、便捷的对话体验.</p>
+</li>
+<li>常见的相关聊天机器人产品：</li>
+</ul>
+<div align=center><img src="./img/01.png" style="zoom:70%" ><img/></div>
+
+<blockquote>
+<p>微软小冰：微软公司开发。它具备自然语言处理、情感分析和对话生成等功能，能够与用户进行智能对话，提供情感支持和娱乐等服务。</p>
+<p>阿里云小蜜：阿里云公司推出，提供了丰富的智能对话服务。它具备自然语言处理和对话管理能力，支持多领域的应用场景，如在线客服、智能助手和虚拟导购等。</p>
+<p>百度智能云小度：百度智能云开发，提供了多领域的智能对话能力。小度机器人可应用于家庭助理、智能音箱和移动应用等场景，通过语音和文本交互与用户进行智能对话，提供信息查询、音乐播放和日程安排等功能。</p>
+</blockquote>
+<ul>
+<li>本项目基于医疗领域数据构建了智能医疗问答系统,目的是为为用户提供准确、高效、优质的医疗问答服务。</li>
+</ul>
+<hr />
+<hr />
+<h3 id="_3">环境准备<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<hr />
+<ul>
+<li>python3.6、 </li>
+<li>transformers==4.2.0 、</li>
+<li>pytorch==1.7.0</li>
+</ul>
+<hr />
+<h3 id="_4">项目整体结构<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div align=center><img src="./img/02.png" style="zoom:60%" ><img/></div>
+
+<hr />
+<h3 id="1">1. 数据介绍<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>数据存放位置：/Users/**/PycharmProjects/llm/ptune_chatglm/data</li>
+<li>data文件夹里面包含1个excel文档：儿科疾病问诊信息.xlsx</li>
+</ul>
+<hr />
+<h4 id="11-xlsx">1.1 儿科疾病问诊信息.xlsx<a class="headerlink" href="#11-xlsx" title="Permanent link">&para;</a></h4>
+<ul>
+<li>儿科疾病问诊信息.xlsx为原始数据集，需要对其进一步处理才能获取对话内容需要的文本</li>
+</ul>
+<div align=center><img src="./img/06.png" style="zoom:60%" ><img/></div>
+
+<blockquote>
+<p>原始excel文档中中一共包含101603条数据，每一条数据都分为 <code>department</code> 、 <code>title</code> 、<code>ask</code> 和 <code>anwer</code> 四部分：</p>
+<ol>
+<li><code>department</code> ：科室名称</li>
+<li><code>title</code>：疾病标题</li>
+<li><code>ask</code>：患者问诊的具体问题</li>
+<li><code>answer</code>:医生的具体回答
+</li>
+</ol>
+</blockquote>
+<hr />
+<h3 id="2">2.数据处理<a class="headerlink" href="#2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>目的：将中文文本数据处理成模型能够识别的张量形式。</p>
+</li>
+<li>
+<p>在项目根目录data文件夹下，存有原始训练语料为"儿科疾病问诊信息.xlsx"，提取问题和答案，组成下面train.txt的格式如下，每段聊天之间间隔一行，格式如下：</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">出生16天</span><span class="err">，</span><span class="n">检查出有先天性胃缺失</span><span class="err">，</span><span class="n">有得救吗</span><span class="err">？</span><span class="n">急急急急急急</span>
+<span class="n">先天性心脏病可以治愈的</span><span class="err">，</span><span class="n">建议到三甲级以上医院做微创或手术治疗</span><span class="err">。</span><span class="n">轻度的心脏病</span><span class="err">，</span><span class="n">没有明显症状的话</span><span class="err">，</span><span class="n">注意避免剧烈活动</span><span class="err">，</span><span class="n">预防感冒和及时防治感染性疾病</span><span class="err">，</span><span class="n">对于健康影响也就不大</span><span class="err">。</span>
+
+<span class="n">发病于出生十天后核黄胆</span><span class="p">,</span><span class="n">到现在十六年了</span><span class="p">,</span><span class="n">到广东三九脑科医院做过颈动脉扩张术</span>
+<span class="n">脑瘫的治疗以细胞渗透修复疗法为主</span><span class="err">，</span><span class="n">细胞渗透修复疗法的治疗原理是神经细胞是来源于中枢神经系统的多能细胞</span><span class="err">，</span><span class="n">终身具有自我更新能力</span><span class="err">，</span><span class="n">可以被诱导分化为各种类型的成熟神经细胞</span><span class="err">。</span><span class="n">它是神经系统形成和发育的源泉</span><span class="err">，</span><span class="n">所以患有脑瘫及神经系统疾病在临床治疗效果是明确的</span><span class="err">、</span><span class="n">理想的</span><span class="err">。</span>
+</code></pre></div>
+<ul>
+<li>
+<p>并将上述文本进行张量的转换</p>
+</li>
+<li>
+<p>实现过程：</p>
+</li>
+<li>运行preprocess.py，对data/train.txt对话语料进行tokenize，然后进行序列化保存到data/train.pkl。train.pkl中序列化的对象的类型为List[List],记录对话列表中,每个对话包含的token。</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="n">preprocess</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">train_path</span> <span class="n">data</span><span class="o">/</span><span class="n">train</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">save_path</span> <span class="n">data</span><span class="o">/</span><span class="n">train</span><span class="o">.</span><span class="n">pkl</span>
+</code></pre></div>
+<ul>
+<li>数据处理基本流程：</li>
+</ul>
+<div align=center><img src="./img/03.png" style="zoom:60%" ><img/></div>
+
+<hr />
+<h4 id="21">2.1 数据格式转换<a class="headerlink" href="#21" title="Permanent link">&para;</a></h4>
+<ul>
+<li>代码路径：/home/user/ProjectStudy/Gpt2_Chatbot/data_preprocess/data_handle.py</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="k">def</span> <span class="nf">read_csv2txt</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s1">&#39;./data/儿科疾病问诊信息.xlsx&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+    <span class="n">data_list</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">data_list</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">question</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">str1</span> <span class="o">=</span> <span class="n">question</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">answer</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./data/train.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">str1</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+<span class="n">read_csv2txt</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h4 id="22">2.2 数据张量转换<a class="headerlink" href="#22" title="Permanent link">&para;</a></h4>
+<ul>
+<li>代码路径：/home/user/ProjectStudy/Gpt2_Chatbot/data_preprocess/preprocess.py</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># 导入分词器</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">BertTokenizerFast</span>
+<span class="c1"># 将数据保存为pkl文件，方便下次读取</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="c1"># 读取数据的进度条展示</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+
+<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">train_txt_path</span><span class="p">,</span> <span class="n">train_pkl_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    对原始语料进行tokenize，将每段对话处理成如下形式：&quot;[CLS]utterance1[SEP]utterance2[SEP]utterance3[SEP]&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;初始化tokenizer，使用BertTokenizerFast.</span>
+<span class="sd">    从预训练的中文Bert模型（bert-base-chinese）创建一个tokenizer对象&#39;&#39;&#39;</span>
+    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">BertTokenizerFast</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;bert-base-chinese&#39;</span><span class="p">,</span>
+                                                  <span class="n">sep_token</span><span class="o">=</span><span class="s2">&quot;[SEP]&quot;</span><span class="p">,</span>
+                                                  <span class="n">pad_token</span><span class="o">=</span><span class="s2">&quot;[PAD]&quot;</span><span class="p">,</span>
+                                                  <span class="n">cls_token</span><span class="o">=</span><span class="s2">&quot;[CLS]&quot;</span><span class="p">)</span>
+
+    <span class="n">sep_id</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">sep_token_id</span>  <span class="c1"># 获取分隔符[SEP]的token ID</span>
+    <span class="n">cls_id</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">cls_token_id</span>  <span class="c1"># 获取起始符[CLS]的token ID</span>
+
+    <span class="c1"># 读取训练数据集</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">train_txt_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>  <span class="c1"># 以UTF-8编码读取文件内容</span>
+
+    <span class="c1"># 根据换行符区分不同的对话段落，需要区分Windows和Linux环境下的换行符</span>
+    <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">train_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">train_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train_data</span><span class="p">))</span>  <span class="c1"># 打印对话段落数量</span>
+    <span class="c1"># 开始进行tokenize</span>
+    <span class="c1"># 保存所有的对话数据,每条数据的格式为：&quot;[CLS]seq1[SEP]seq2[SEP]seq3[SEP]&quot;</span>
+    <span class="n">dialogue_len</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 记录所有对话tokenize之后的长度，用于统计中位数与均值</span>
+    <span class="n">dialogue_list</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 记录所有对话</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">dialogue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">train_data</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">sequences</span> <span class="o">=</span> <span class="n">dialogue</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sequences</span> <span class="o">=</span> <span class="n">dialogue</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">input_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">cls_id</span><span class="p">]</span>  <span class="c1"># 每个dialogue以[CLS]开头</span>
+        <span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">sequences</span><span class="p">:</span>
+            <span class="c1"># 将每个对话句子进行tokenize，并将结果拼接到input_ids列表中</span>
+            <span class="n">input_ids</span> <span class="o">+=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
+            <span class="n">input_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sep_id</span><span class="p">)</span>  <span class="c1"># 每个seq之后添加[SEP]，表示seqs会话结束</span>
+
+        <span class="n">dialogue_len</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">input_ids</span><span class="p">))</span>  <span class="c1"># 将对话的tokenize后的长度添加到对话长度列表中</span>
+        <span class="n">dialogue_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_ids</span><span class="p">)</span>  <span class="c1"># 将tokenize后的对话添加到对话列表中</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;dialogue_len---&gt;</span><span class="si">{</span><span class="n">dialogue_len</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># 打印对话长度列表</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;dialogue_list---&gt;</span><span class="si">{</span><span class="n">dialogue_list</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># 打印</span>
+
+    <span class="c1"># 保存pkl文件数据</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">train_pkl_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dialogue_list</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h4 id="23">2.3 数据张量再次封装<a class="headerlink" href="#23" title="Permanent link">&para;</a></h4>
+<h5 id="231-dataset">2.3.1 封装DataSet对象<a class="headerlink" href="#231-dataset" title="Permanent link">&para;</a></h5>
+<ul>
+<li>代码路径：/home/user/ProjectStudy/Gpt2_Chatbot/data_preprocess/dataset.py</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span>  <span class="c1"># 导入Dataset模块，用于定义自定义数据集</span>
+<span class="kn">import</span> <span class="nn">torch</span>  <span class="c1"># 导入torch模块，用于处理张量和构建神经网络</span>
+
+
+<span class="k">class</span> <span class="nc">MyDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    自定义数据集类，继承自Dataset类</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_list</span><span class="p">,</span> <span class="n">max_len</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        初始化函数，用于设置数据集的属性</span>
+<span class="sd">        :param input_list: 输入列表，包含所有对话的tokenize后的输入序列</span>
+<span class="sd">        :param max_len: 最大序列长度，用于对输入进行截断或填充</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_list</span> <span class="o">=</span> <span class="n">input_list</span>  <span class="c1"># 将输入列表赋值给数据集的input_list属性</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_len</span> <span class="o">=</span> <span class="n">max_len</span>  <span class="c1"># 将最大序列长度赋值给数据集的max_len属性</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        获取数据集的长度</span>
+<span class="sd">        :return: 数据集的长度</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_list</span><span class="p">)</span>  <span class="c1"># 返回数据集的长度</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        根据给定索引获取数据集中的一个样本</span>
+<span class="sd">        :param index: 样本的索引</span>
+<span class="sd">        :return: 样本的输入序列张量</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>  <span class="c1"># 获取给定索引处的输入序列</span>
+        <span class="n">input_ids</span> <span class="o">=</span> <span class="n">input_ids</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">max_len</span><span class="p">]</span>  <span class="c1"># 根据最大序列长度对输入进行截断或填充</span>
+        <span class="n">input_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>  <span class="c1"># 将输入序列转换为long类型</span>
+        <span class="k">return</span> <span class="n">input_ids</span>  <span class="c1"># 返回样本的输入序列张量</span>
+</code></pre></div>
+<hr />
+<h5 id="232-dataloader">2.3.2 封装DataLoader对象<a class="headerlink" href="#232-dataloader" title="Permanent link">&para;</a></h5>
+<ul>
+<li>代码路径：/home/user/ProjectStudy/Gpt2_Chatbot/data_preprocess/dataloader.py</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># 导入rnn_utils模块，用于处理可变长度序列的填充和排序</span>
+<span class="kn">import</span> <span class="nn">torch.nn.utils.rnn</span> <span class="k">as</span> <span class="nn">rnn_utils</span>  
+
+<span class="c1"># 导入Dataset和DataLoader模块，用于加载和处理数据集</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">DataLoader</span> 
+
+<span class="kn">import</span> <span class="nn">torch</span>  <span class="c1"># 导入torch模块，用于处理张量和构建神经网络</span>
+<span class="kn">import</span> <span class="nn">pickle</span>  <span class="c1"># 导入pickle模块，用于序列化和反序列化Python对象</span>
+<span class="kn">from</span> <span class="nn">dataset</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># 导入自定义的数据集类</span>
+
+<span class="k">def</span> <span class="nf">load_dataset</span><span class="p">(</span><span class="n">train_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    加载训练集和验证集</span>
+<span class="sd">    :param train_path: 训练数据集路径</span>
+<span class="sd">    :return: 训练数据集和验证数据集</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">input_list</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  <span class="c1"># 从文件中加载输入列表</span>
+
+    <span class="c1"># 划分训练集与验证集</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">input_list</span><span class="p">))</span>  <span class="c1"># 打印输入列表的长度</span>
+    <span class="n">input_list_train</span> <span class="o">=</span> <span class="n">input_list</span><span class="p">[</span><span class="mi">200</span><span class="p">:]</span>  <span class="c1"># 将输入列表划分为训练集部分</span>
+    <span class="n">input_list_val</span> <span class="o">=</span> <span class="n">input_list</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span>  <span class="c1"># 将输入列表划分为验证集部分</span>
+
+    <span class="n">train_dataset</span> <span class="o">=</span> <span class="n">MyDataset</span><span class="p">(</span><span class="n">input_list_train</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>  <span class="c1"># 创建训练数据集对象</span>
+    <span class="n">val_dataset</span> <span class="o">=</span> <span class="n">MyDataset</span><span class="p">(</span><span class="n">input_list_val</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>  <span class="c1"># 创建验证数据集对象</span>
+    <span class="k">return</span> <span class="n">train_dataset</span><span class="p">,</span> <span class="n">val_dataset</span>  <span class="c1"># 返回训练数据集和验证数据集</span>
+
+<span class="k">def</span> <span class="nf">collate_fn</span><span class="p">(</span><span class="n">batch</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    自定义的collate_fn函数，用于将数据集中的样本进行批处理</span>
+<span class="sd">    :param batch: 样本列表</span>
+<span class="sd">    :return: 经过填充的输入序列张量和标签序列张量</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+     <span class="c1"># 对输入序列进行填充，使其长度一致</span>
+    <span class="n">input_ids</span> <span class="o">=</span> <span class="n">rnn_utils</span><span class="o">.</span><span class="n">pad_sequence</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">padding_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+
+    <span class="c1"># 对标签序列进行填充，使其长度一致</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">rnn_utils</span><span class="o">.</span><span class="n">pad_sequence</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">padding_value</span><span class="o">=-</span><span class="mi">100</span><span class="p">)</span> 
+
+    <span class="k">return</span> <span class="n">input_ids</span><span class="p">,</span> <span class="n">labels</span>  <span class="c1"># 返回经过填充的输入序列张量和标签序列张量</span>
+
+<span class="k">def</span> <span class="nf">get_dataloader</span><span class="p">(</span><span class="n">train_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    获取训练数据集和验证数据集的DataLoader对象</span>
+<span class="sd">    :param train_path: 训练数据集路径</span>
+<span class="sd">    :return: 训练数据集的DataLoader对象和验证数据集的DataLoader对象</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># 加载训练数据集和验证数据集</span>
+    <span class="n">train_dataset</span><span class="p">,</span> <span class="n">val_dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="n">train_path</span><span class="p">)</span> 
+
+    <span class="c1"># 创建训练数据集的DataLoader对象</span>
+    <span class="n">train_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span>
+                                  <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                  <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">collate_fn</span><span class="o">=</span><span class="n">collate_fn</span><span class="p">,</span>
+                                  <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+    <span class="c1"># 创建验证数据集的DataLoader对象</span>
+    <span class="n">validate_dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">val_dataset</span><span class="p">,</span>
+                                     <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                     <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                     <span class="n">collate_fn</span><span class="o">=</span><span class="n">collate_fn</span><span class="p">,</span>
+                                     <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+    <span class="k">return</span> <span class="n">train_dataloader</span><span class="p">,</span> <span class="n">validate_dataloader</span>  
+</code></pre></div>
+<hr />
+<h3 id="3">3. 模型搭建<a class="headerlink" href="#3" title="Permanent link">&para;</a></h3>
+<hr />
+<h4 id="31">3.1 模型架构介绍<a class="headerlink" href="#31" title="Permanent link">&para;</a></h4>
+<div align=center><img src="./img/04.png" style="zoom:70%" ><img/></div>
+
+<ul>
+<li>模型架构解析：</li>
+<li>输入层：词嵌入层：WordEmbedding +位置嵌入层：PositionEmbedding</li>
+<li>中间层：Transformer的Decoder模块---12层</li>
+<li>
+<p>输出层：LayerNorm层+线性全连接层</p>
+</li>
+<li>
+<p>模型主要参数简介(详见模型的config.json文件):</p>
+</li>
+<li>n_embd: 768</li>
+<li>n_head: 12</li>
+<li>n_layer: 12</li>
+<li>n_positions: 1024</li>
+<li>vocab_size: 21128</li>
+</ul>
+<hr />
+<h4 id="32-gpt2">3.2 GPT2模型准备<a class="headerlink" href="#32-gpt2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>本次项目使用GPT2的预训练模型，因此不需要额外搭建Model类，下面代码是如何直接加载使用GPT2预训练模型</li>
+<li>代码示例:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">GPT2LMHeadModel</span><span class="p">,</span> <span class="n">GPT2Config</span>
+<span class="c1"># 创建模型</span>
+<span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">pretrained_model</span><span class="p">:</span>  
+    <span class="c1"># 加载预训练模型</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">GPT2LMHeadModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">pretrained_model</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>  
+    <span class="c1"># 初始化模型</span>
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">GPT2Config</span><span class="o">.</span><span class="n">from_json_file</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">config_json</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">GPT2LMHeadModel</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">model_config</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="4">4. 模型训练和验证<a class="headerlink" href="#4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>主要代码</li>
+</ul>
+<div align=center><img src="./img/05.png" style="zoom:70%" ><img/></div>
+
+<ul>
+<li>
+<p>代码路径</p>
+</li>
+<li>
+<p>训练主函数：/home/user/ProjectStudy/Gpt2_Chatbot/data_preprocess/train.py</p>
+</li>
+<li>
+<p>辅助工具类：/home/user/ProjectStudy/Gpt2_Chatbot/data_preprocess/functions_tools.py</p>
+</li>
+</ul>
+<hr />
+<ul>
+<li>trian.py代码解析</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">transformers</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">GPT2LMHeadModel</span><span class="p">,</span> <span class="n">GPT2Config</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">BertTokenizerFast</span>
+<span class="kn">from</span> <span class="nn">functions_tools</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parameter_config</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">data_preprocess.dataloader</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pytorch_tools</span> <span class="kn">import</span> <span class="n">EarlyStopping</span>
+
+
+<span class="k">def</span> <span class="nf">train_epoch</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+                <span class="n">train_dataloader</span><span class="p">,</span>
+                <span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">,</span>
+                <span class="n">epoch</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">device</span>
+    <span class="c1"># 对于ignore_index的label token不计算梯度</span>
+    <span class="n">ignore_index</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ignore_index</span>
+    <span class="n">epoch_start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 记录下整个epoch的loss的总和</span>
+
+    <span class="c1"># epoch_correct_num:每个epoch中,output预测正确的word的数量</span>
+    <span class="c1"># epoch_total_num: 每个epoch中,output预测的word的总数量</span>
+    <span class="n">epoch_correct_num</span><span class="p">,</span> <span class="n">epoch_total_num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">):</span>
+        <span class="n">input_ids</span> <span class="o">=</span> <span class="n">input_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">logits</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">loss</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+        <span class="c1"># 统计该batch的预测token的正确数与总数</span>
+        <span class="n">batch_correct_num</span><span class="p">,</span> <span class="n">batch_total_num</span> <span class="o">=</span> <span class="n">calculate_acc</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="n">ignore_index</span><span class="p">)</span>
+
+        <span class="c1"># 统计该epoch的预测token的正确数与总数</span>
+        <span class="n">epoch_correct_num</span> <span class="o">+=</span> <span class="n">batch_correct_num</span>
+        <span class="n">epoch_total_num</span> <span class="o">+=</span> <span class="n">batch_total_num</span>
+        <span class="c1"># 计算该batch的accuracy</span>
+        <span class="n">batch_acc</span> <span class="o">=</span> <span class="n">batch_correct_num</span> <span class="o">/</span> <span class="n">batch_total_num</span>
+
+        <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span>
+
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="c1"># 梯度裁剪 # 避免梯度爆炸的方式。</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">clip_grad_norm_</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">args</span><span class="o">.</span><span class="n">max_grad_norm</span><span class="p">)</span>
+
+        <span class="c1"># 进行一定step的梯度累计之后，更新参数</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># 更新参数</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="c1"># 更新学习率</span>
+            <span class="n">scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="c1"># 清空梯度信息</span>
+            <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">loss_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;batch </span><span class="si">{}</span><span class="s2"> of epoch </span><span class="si">{}</span><span class="s2">, loss </span><span class="si">{}</span><span class="s2">, batch_acc </span><span class="si">{}</span><span class="s2">, lr </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">*</span> <span class="n">args</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span><span class="p">,</span> <span class="n">batch_acc</span><span class="p">,</span> <span class="n">scheduler</span><span class="o">.</span><span class="n">get_lr</span><span class="p">()))</span>
+
+        <span class="k">del</span> <span class="n">input_ids</span><span class="p">,</span> <span class="n">outputs</span>
+
+
+    <span class="c1"># 记录当前epoch的平均loss与accuracy</span>
+    <span class="n">epoch_mean_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">)</span>
+    <span class="n">epoch_mean_acc</span> <span class="o">=</span> <span class="n">epoch_correct_num</span> <span class="o">/</span> <span class="n">epoch_total_num</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="s2">&quot;epoch </span><span class="si">{}</span><span class="s2">: loss </span><span class="si">{}</span><span class="s2">, predict_acc </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">epoch_mean_loss</span><span class="p">,</span> <span class="n">epoch_mean_acc</span><span class="p">))</span>
+
+    <span class="c1"># save model</span>
+    <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">epoch</span> <span class="o">==</span> <span class="n">args</span><span class="o">.</span><span class="n">epochs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;saving model for epoch </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">save_model_path</span><span class="p">,</span> <span class="s1">&#39;bj_epoch</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">save_pretrained</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;epoch </span><span class="si">{}</span><span class="s1"> finished&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">epoch_finish_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;time for one epoch: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch_finish_time</span> <span class="o">-</span> <span class="n">epoch_start_time</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">epoch_mean_loss</span>
+
+
+<span class="k">def</span> <span class="nf">validate_epoch</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">validate_dataloader</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start validating&quot;</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">device</span>
+    <span class="n">ignore_index</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ignore_index</span>
+    <span class="n">epoch_start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># 捕获cuda out of memory exception</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">validate_dataloader</span><span class="p">):</span>
+            <span class="n">input_ids</span> <span class="o">=</span> <span class="n">input_ids</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+            <span class="n">logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">logits</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">loss</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+            <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">input_ids</span><span class="p">,</span> <span class="n">outputs</span>
+
+        <span class="c1"># 记录当前epoch的平均loss</span>
+        <span class="n">epoch_mean_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">validate_dataloader</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;validate epoch </span><span class="si">{}</span><span class="s2">: loss </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">epoch_mean_loss</span><span class="p">))</span>
+        <span class="n">epoch_finish_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;time for validating one epoch: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch_finish_time</span> <span class="o">-</span> <span class="n">epoch_start_time</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">epoch_mean_loss</span>
+
+
+<span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>  <span class="n">train_dataloader</span><span class="p">,</span> <span class="n">validate_dataloader</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+    <span class="c1"># early_stopping = EarlyStopping(patience=0, verbose=True)</span>
+    <span class="n">t_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_dataloader</span><span class="p">)</span> <span class="o">//</span> <span class="n">args</span><span class="o">.</span><span class="n">gradient_accumulation_steps</span> <span class="o">*</span> <span class="n">args</span><span class="o">.</span><span class="n">epochs</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    这里对于模型的参数，分别就行权重参数的衰减优化：防止过拟合，以及学习率预热处理优化：</span>
+<span class="sd">    在初始阶段将学习率从较小的值逐步增加到设定的初始值，然后按照设定的学习率调整策略进行训练。</span>
+<span class="sd">    学习率预热的目的是让模型在初始阶段更快地适应数据，避免训练过程中因为学习率过大导致的梯度爆炸等问题，</span>
+<span class="sd">    从而提高模型的训练效果和泛化性能。</span>
+<span class="sd">    optimizer： 优化器</span>
+<span class="sd">    num_warmup_steps：初始预热步数</span>
+<span class="sd">    num_training_steps：整个训练过程的总步数</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">scheduler</span> <span class="o">=</span> <span class="n">transformers</span><span class="o">.</span><span class="n">get_linear_schedule_with_warmup</span>
+    <span class="p">(</span>
+        <span class="n">optimizer</span><span class="p">,</span> 
+        <span class="n">num_warmup_steps</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">warmup_steps</span><span class="p">,</span> 
+        <span class="n">num_training_steps</span><span class="o">=</span><span class="n">t_total</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;starting training&#39;</span><span class="p">)</span>
+
+    <span class="c1"># 用于记录每个epoch训练和验证的loss</span>
+    <span class="n">train_losses</span><span class="p">,</span> <span class="n">validate_losses</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="c1"># 记录验证集的最小loss</span>
+    <span class="n">best_val_loss</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="c1"># 开始训练</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="c1"># ========== train ========== #</span>
+        <span class="n">train_loss</span> <span class="o">=</span> <span class="n">train_epoch</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloader</span><span class="o">=</span><span class="n">train_dataloader</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">scheduler</span><span class="o">=</span><span class="n">scheduler</span><span class="p">,</span>
+            <span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">train_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_loss</span><span class="p">)</span>
+
+        <span class="c1"># ========== validate ========== #</span>
+        <span class="n">validate_loss</span> <span class="o">=</span> <span class="n">validate_epoch</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">validate_dataloader</span><span class="o">=</span><span class="n">validate_dataloader</span><span class="p">,</span>
+            <span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">validate_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">validate_loss</span><span class="p">)</span>
+
+        <span class="c1"># 保存当前困惑度最低的模型，困惑度低，模型的生成效果不一定会越好</span>
+        <span class="k">if</span> <span class="n">validate_loss</span> <span class="o">&lt;</span> <span class="n">best_val_loss</span><span class="p">:</span>
+            <span class="n">best_val_loss</span> <span class="o">=</span> <span class="n">validate_loss</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;saving current best model for epoch </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">model_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">save_model_path</span><span class="p">,</span>
+                                      <span class="s1">&#39;min_ppl_model_bj&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_path</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">save_pretrained</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># 初始化配置参数</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">ParameterConfig</span><span class="p">()</span>
+
+    <span class="c1"># 设置使用哪些显卡进行训练:默认为0</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+
+
+    <span class="c1"># 初始化tokenizer</span>
+    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">BertTokenizerFast</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">vocab_path</span><span class="p">,</span>
+                                  <span class="n">sep_token</span><span class="o">=</span><span class="s2">&quot;[SEP]&quot;</span><span class="p">,</span>
+                                  <span class="n">pad_token</span><span class="o">=</span><span class="s2">&quot;[PAD]&quot;</span><span class="p">,</span>
+                                  <span class="n">cls_token</span><span class="o">=</span><span class="s2">&quot;[CLS]&quot;</span><span class="p">)</span>
+
+
+    <span class="c1"># 创建模型的输出目录</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">save_model_path</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">save_model_path</span><span class="p">)</span>
+
+    <span class="c1"># 创建模型</span>
+    <span class="k">if</span> <span class="n">params</span><span class="o">.</span><span class="n">pretrained_model</span><span class="p">:</span> 
+        <span class="c1"># 加载预训练模型</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">GPT2LMHeadModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">pretrained_model</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  
+        <span class="c1"># 初始化模型</span>
+        <span class="n">model_config</span> <span class="o">=</span> <span class="n">GPT2Config</span><span class="o">.</span><span class="n">from_json_file</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">config_json</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">GPT2LMHeadModel</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">model_config</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">==</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">vocab_size</span>
+
+
+    <span class="c1"># 计算模型参数数量</span>
+    <span class="n">num_parameters</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+        <span class="n">num_parameters</span> <span class="o">+=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;模型参数总量---》</span><span class="si">{</span><span class="n">num_parameters</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># 加载训练集和验证集</span>
+    <span class="c1"># ========= Loading Dataset ========= #</span>
+    <span class="n">train_dataloader</span><span class="p">,</span> <span class="n">validate_dataloader</span> <span class="o">=</span> <span class="n">get_dataloader</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">train_path</span><span class="p">)</span>
+    <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_dataloader</span><span class="p">,</span> <span class="n">validate_dataloader</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<ul>
+<li>functions_tools.py代码解析</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+
+<span class="k">def</span> <span class="nf">calculate_acc</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=-</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">logit</span> <span class="o">=</span> <span class="n">logit</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">logit</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">logit</span> <span class="o">=</span> <span class="n">logit</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 对于每条数据，返回最大的index</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    在 PyTorch 中，labels.ne(ignore_index) 表示将标签张量 labels 中的值不等于 ignore_index 的位置标记为 True，等于 ignore_index 的位置标记为 False。</span>
+<span class="sd">    这个操作通常被用于计算交叉熵损失，以过滤掉 ignore_index 对损失的贡献</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># 进行非运算，返回一个tensor，若labels的第i个位置为pad_id，则置为0，否则为1</span>
+    <span class="n">non_pad_mask</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="n">ignore_index</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    在 PyTorch 中，</span>
+<span class="sd">    logit.eq(labels) 表示将模型的预测输出值 logit 中等于标签张量 labels 的位置标记为 True，不等于标签张量 labels 的位置标记为 False。这个操作通常被用于计算交叉熵损失，以标记出预测输出值和标签值相等的位置。</span>
+<span class="sd">    masked_select(non_pad_mask) 表示将张量中非填充标记的位置选出来。这个操作通常被用于计算损失时，过滤掉填充标记对损失的影响。</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">n_correct</span> <span class="o">=</span> <span class="n">logit</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">masked_select</span><span class="p">(</span><span class="n">non_pad_mask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">n_word</span> <span class="o">=</span> <span class="n">non_pad_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">n_correct</span><span class="p">,</span> <span class="n">n_word</span>
+</code></pre></div>
+<hr />
+<h3 id="5">5. 模型预测（人机交互）<a class="headerlink" href="#5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>运行interact.py，使用训练好的模型，进行人机交互，输入Ctrl+Z结束对话之后，聊天记录将保存到sample目录下的sample.txt文件中。</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">GPT2LMHeadModel</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">BertTokenizerFast</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">parameter_config</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">PAD</span> <span class="o">=</span> <span class="s1">&#39;[PAD]&#39;</span>
+<span class="n">pad_id</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="k">def</span> <span class="nf">top_k_top_p_filtering</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">filter_value</span><span class="o">=-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;Inf&#39;</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;使用top-k和/或nucleus（top-p）筛选来过滤logits的分布</span>
+<span class="sd">        参数:</span>
+<span class="sd">            logits: logits的分布，形状为（词汇大小）</span>
+<span class="sd">            top_k &gt; 0: 保留概率最高的top k个标记（top-k筛选）。</span>
+<span class="sd">            top_p &gt; 0.0: 保留累积概率大于等于top_p的top标记（nucleus筛选）。</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">logits</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>  <span class="c1"># batch size 1 for now - could be updated for more but the code would be less clear</span>
+    <span class="n">top_k</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">top_k</span><span class="p">,</span> <span class="n">logits</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># Safety check</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;top_k----&gt;</span><span class="si">{</span><span class="n">top_k</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">top_k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Remove all tokens with a probability less than the last token of the top-k</span>
+        <span class="c1"># torch.topk()返回最后一维最大的top_k个元素，返回值为二维(values,indices)</span>
+        <span class="c1"># ...表示其他维度由计算机自行推断</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;torch.topk(logits, top_k)--&gt;</span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span><span class="w"> </span><span class="n">top_k</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">indices_to_remove</span> <span class="o">=</span> <span class="n">logits</span> <span class="o">&lt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">logits</span><span class="p">[</span><span class="n">indices_to_remove</span><span class="p">]</span> <span class="o">=</span> <span class="n">filter_value</span>  <span class="c1"># 对于topk之外的其他元素的logits值设为负无穷</span>
+
+    <span class="k">if</span> <span class="n">top_p</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">sorted_logits</span><span class="p">,</span> <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># 对logits进行递减排序</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;sorted_logits--&gt;</span><span class="si">{</span><span class="n">sorted_logits</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;sorted_indices--&gt;</span><span class="si">{</span><span class="n">sorted_indices</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">cumulative_probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">sorted_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Remove tokens with cumulative probability above the threshold</span>
+        <span class="n">sorted_indices_to_remove</span> <span class="o">=</span> <span class="n">cumulative_probs</span> <span class="o">&gt;</span> <span class="n">top_p</span>
+        <span class="c1"># Shift the indices to the right to keep also the first token above the threshold</span>
+        <span class="n">sorted_indices_to_remove</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">sorted_indices_to_remove</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">sorted_indices_to_remove</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">indices_to_remove</span> <span class="o">=</span> <span class="n">sorted_indices</span><span class="p">[</span><span class="n">sorted_indices_to_remove</span><span class="p">]</span>
+        <span class="n">logits</span><span class="p">[</span><span class="n">indices_to_remove</span><span class="p">]</span> <span class="o">=</span> <span class="n">filter_value</span>
+    <span class="k">return</span> <span class="n">logits</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">pconf</span> <span class="o">=</span> <span class="n">ParameterConfig</span><span class="p">()</span>
+    <span class="c1"># 当用户使用GPU,并且GPU可用时</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;using device:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CUDA_VISIBLE_DEVICES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">BertTokenizerFast</span><span class="p">(</span><span class="n">vocab_file</span><span class="o">=</span><span class="n">pconf</span><span class="o">.</span><span class="n">vocab_path</span><span class="p">,</span>
+                                  <span class="n">sep_token</span><span class="o">=</span><span class="s2">&quot;[SEP]&quot;</span><span class="p">,</span>
+                                  <span class="n">pad_token</span><span class="o">=</span><span class="s2">&quot;[PAD]&quot;</span><span class="p">,</span>
+                                  <span class="n">cls_token</span><span class="o">=</span><span class="s2">&quot;[CLS]&quot;</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">GPT2LMHeadModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s1">&#39;./save_model/epoch25&#39;</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="c1"># 保存聊天记录的文件路径</span>
+    <span class="k">if</span> <span class="n">pconf</span><span class="o">.</span><span class="n">save_samples_path</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pconf</span><span class="o">.</span><span class="n">save_samples_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">pconf</span><span class="o">.</span><span class="n">save_samples_path</span><span class="p">)</span>
+        <span class="n">samples_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">pconf</span><span class="o">.</span><span class="n">save_samples_path</span> <span class="o">+</span> <span class="s1">&#39;/samples.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="n">samples_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;聊天记录</span><span class="si">{}</span><span class="s2">:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()))</span>
+    <span class="c1"># 存储聊天记录，每个utterance以token的id的形式进行存储</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;开始和chatbot聊天，输入CTRL + Z以退出&#39;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;user:&quot;</span><span class="p">)</span>
+            <span class="c1"># text = &quot;你好&quot;</span>
+            <span class="k">if</span> <span class="n">pconf</span><span class="o">.</span><span class="n">save_samples_path</span><span class="p">:</span>
+                <span class="n">samples_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;user:</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+            <span class="n">text_ids</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;text_ids--&gt;</span><span class="si">{</span><span class="n">text_ids</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+            <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text_ids</span><span class="p">)</span>
+            <span class="n">input_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">cls_token_id</span><span class="p">]</span>  <span class="c1"># 每个input以[CLS]为开头</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;history---.</span><span class="si">{</span><span class="n">history</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;input_ids---.</span><span class="si">{</span><span class="n">input_ids</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;history[-pconf.max_history_len:]--&gt;</span><span class="si">{</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="n">pconf</span><span class="o">.</span><span class="n">max_history_len</span><span class="p">:]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">history_id</span><span class="p">,</span> <span class="n">history_utr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="n">pconf</span><span class="o">.</span><span class="n">max_history_len</span><span class="p">:]):</span>
+                <span class="n">input_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">history_utr</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">input_ids</span><span class="p">)</span>
+                <span class="n">input_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">sep_token_id</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">input_ids</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;new_inut---&gt;</span><span class="si">{</span><span class="n">input_ids</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">input_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">input_ids</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">input_ids</span> <span class="o">=</span> <span class="n">input_ids</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;las--inputs_ids</span><span class="si">{</span><span class="n">input_ids</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 根据context，生成的response</span>
+            <span class="c1"># 最多生成max_len个token</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pconf</span><span class="o">.</span><span class="n">max_len</span><span class="p">):</span>
+                <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_ids</span><span class="o">=</span><span class="n">input_ids</span><span class="p">)</span>
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">outputs</span><span class="o">.</span><span class="n">logits</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;logits---&gt;</span><span class="si">{</span><span class="n">logits</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;logits---&gt;</span><span class="si">{</span><span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+                <span class="n">next_token_logits</span> <span class="o">=</span> <span class="n">logits</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+                <span class="c1"># 对于已生成的结果generated中的每个token添加一个重复惩罚项，降低其生成概率</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;next_token_logits--&gt;</span><span class="si">{</span><span class="n">next_token_logits</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;id---&gt;</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">next_token_logits</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">/=</span> <span class="n">pconf</span><span class="o">.</span><span class="n">repetition_penalty</span>
+                <span class="c1"># 对于[UNK]的概率设为无穷小，也就是说模型的预测结果不可能是[UNK]这个token</span>
+                <span class="n">next_token_logits</span><span class="p">[</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_tokens_to_ids</span><span class="p">(</span><span class="s1">&#39;[UNK]&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;Inf&#39;</span><span class="p">)</span>
+                <span class="n">filtered_logits</span> <span class="o">=</span> <span class="n">top_k_top_p_filtering</span><span class="p">(</span><span class="n">next_token_logits</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="n">pconf</span><span class="o">.</span><span class="n">topk</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="n">pconf</span><span class="o">.</span><span class="n">topp</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;filtered_logits--&gt;</span><span class="si">{</span><span class="n">filtered_logits</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="c1"># torch.multinomial表示从候选集合中无放回地进行抽取num_samples个元素，权重越高，抽到的几率越高，返回元素的下标</span>
+                <span class="n">next_token</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">filtered_logits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;next_token--&gt;</span><span class="si">{</span><span class="n">next_token</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">next_token</span> <span class="o">==</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">sep_token_id</span><span class="p">:</span>  <span class="c1"># 遇到[SEP]则表明response生成结束</span>
+                    <span class="k">break</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_token</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+                <span class="n">input_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">next_token</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="c1"># his_text = tokenizer.convert_ids_to_tokens(curr_input_tensor.tolist())</span>
+                <span class="c1"># print(&quot;his_text:{}&quot;.format(his_text))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;response--&gt;</span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_ids_to_tokens</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;chatbot:&quot;</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">pconf</span><span class="o">.</span><span class="n">save_samples_path</span><span class="p">:</span>
+                <span class="n">samples_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;chatbot:</span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pconf</span><span class="o">.</span><span class="n">save_samples_path</span><span class="p">:</span>
+                <span class="n">samples_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">break</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.081f42fc.min.js"></script>
+      
+        <script src="../js/extra.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+      
+    
+  </body>
+</html>
